@@ -1,28 +1,24 @@
 import io.github.rkbalgi.iso4k.Spec
 import io.github.rkbalgi.iso4k.fromHexString
-
-import kotlin.test.Test
-
-
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
+import kotlin.test.*
 
 
 internal class MiscTestsJs {
 
 
     @Test
-    fun findMessageTest() {
+    fun findMessageTest() = runTest {
 
         val spec = Spec.spec("SampleSpec")
 
-        val msgData = fromHexString("31313030")
-        assertEquals("1100/1110 - Authorization", spec!!.findMessage(msgData))
-        assertNull(spec.findMessage(fromHexString("31313131")))
+        spec?.messageSegments()?.forEach { println(it.name) }
 
+        val msgData = fromHexString("31313030")
+        assertEquals("1100/1110 - Authorization", spec?.findMessage(msgData))
+        assertNull(spec?.findMessage(fromHexString("31313131")))
     }
+
 
     @Test
     fun yamlTest() {

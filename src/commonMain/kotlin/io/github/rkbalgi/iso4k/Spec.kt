@@ -2,6 +2,7 @@ package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.Napier
 import io.ktor.utils.io.*
+import io.ktor.utils.io.core.*
 import kotlinx.serialization.Serializable
 
 
@@ -41,9 +42,10 @@ public class Spec(
     }
 
     fun findMessage(msgData: ByteArray): String? {
-        val bb = ByteReadChannel(msgData)
+        val bb = newBuffer(msgData)
         var headerVal = headerFields.map { it.parse(bb) }.reduce { acc, a -> (acc + a) }
 
+        println("Looking for $headerVal")
         return try {
             messageSegments.first { it.selectorMatch(headerVal) }.name
         } catch (e: Exception) {
@@ -106,6 +108,7 @@ public class Spec(
             if (!initialized) {
                 loadSpecs()
                 specMap.values.forEach { it.init() }
+                Napier.i("Initialized Specs")
                 initialized = true
             }
 
@@ -121,5 +124,5 @@ public class Spec(
 }
 
 expect fun loadSpecs(): List<String>?
-
+expect fun newBuffer(data: ByteArray): Buffer
 

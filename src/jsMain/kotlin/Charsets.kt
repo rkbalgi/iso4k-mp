@@ -14,7 +14,7 @@ actual class Charsets {
         actual fun toString(data: ByteArray, encoding: DataEncoding): String {
             return when (encoding) {
                 DataEncoding.ASCII -> {
-                    data.contentToString()
+                    data.encodedString(ASCII)
                 }
                 DataEncoding.EBCDIC -> {
                     data.encodedString(EBCDIC)

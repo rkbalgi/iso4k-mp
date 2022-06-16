@@ -61,6 +61,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
                 implementation("net.mamoe.yamlkt:yamlkt:0.10.2")
 
+
                 //implementation("com.google.guava:guava:$guavaVersion")
 
             }
@@ -84,7 +85,11 @@ kotlin {
         }
         val jvmTest by getting
         val jsMain by getting
-        val jsTest by getting
+        val jsTest by getting{
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
+            }
+        }
         //val nativeMain by getting
         //val nativeTest by getting
     }

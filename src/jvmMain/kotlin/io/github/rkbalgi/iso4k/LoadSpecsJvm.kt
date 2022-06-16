@@ -7,6 +7,9 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.Spec.Companion.specMap
+import io.ktor.utils.io.bits.*
+import io.ktor.utils.io.core.*
+import net.mamoe.yamlkt.Yaml
 
 import java.io.File
 import java.nio.file.Path
@@ -44,12 +47,14 @@ actual fun loadSpecs(): List<String>? {
     } else {
         //try to read from classpath
         Napier.i("Loading spec definitions from classpath")
-        allSpecs = objectMapper.readValue<List<String>>(Spec::javaClass.javaClass.getResource("/specs.yml"))
+        allSpecs = Yaml.decodeListFromString(
+            Spec::javaClass.javaClass.getResource("/specs.yml").readText(Charsets.UTF_8)
+        ) as List<String>//objectMapper.readValue<List<String>>(Spec::javaClass.javaClass.getResource("/specs.yml"))
 
         allSpecs.forEach {
             Napier.i("Reading spec $it from classpath")
             val fileContent = Spec::javaClass.javaClass.getResource(it).readText()
-            val spec = objectMapper.readValue<Spec>(fileContent)
+            val spec = Yaml.decodeFromString(Spec.serializer(), fileContent)
             specMap[spec.name] = spec
         }
     }
@@ -57,4 +62,8 @@ actual fun loadSpecs(): List<String>? {
 
 
     return null
+}
+
+actual fun newBuffer(data: ByteArray): Buffer {
+    return Buffer()
 }

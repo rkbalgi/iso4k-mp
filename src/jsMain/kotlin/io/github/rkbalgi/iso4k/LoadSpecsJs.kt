@@ -1,8 +1,20 @@
 package io.github.rkbalgi.iso4k
 
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
+import io.ktor.utils.io.bits.*
+import io.ktor.utils.io.core.*
 import net.mamoe.yamlkt.Yaml
+import org.khronos.webgl.ArrayBuffer
+import org.khronos.webgl.DataView
+import org.khronos.webgl.Int8Array
 
 actual fun loadSpecs(): List<String>? {
+
+    Napier.base(DebugAntilog())
+
+    Napier.i("Loading Spec definitions .. ")
+
     var decoded = Yaml.decodeFromString(
         Spec.serializer(), """
 
@@ -260,7 +272,11 @@ messageSegments:
 
     """.trimIndent()
     )
-    println(decoded)
 
-    return null
+    Spec.specMap[decoded.name] = decoded
+    return listOf(decoded.name)
+}
+
+actual fun newBuffer(data: ByteArray): Buffer {
+    return Buffer(Memory(DataView(null!!,0,data.size)))
 }

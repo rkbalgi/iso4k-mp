@@ -4,6 +4,7 @@ package io.github.rkbalgi.iso4k
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.charsets.Charsets
 import io.ktor.utils.io.*
+import io.ktor.utils.io.core.*
 import kotlin.experimental.and
 
 @kotlinx.serialization.Serializable
@@ -15,6 +16,7 @@ enum class DataEncoding {
 enum class FieldType {
     Fixed, Variable, Terminated, Bitmapped
 }
+
 @kotlinx.serialization.Serializable
 data class IsoField(
         val id: Int,
@@ -22,8 +24,8 @@ data class IsoField(
         val type: FieldType,
         val len: Int,
         val dataEncoding: DataEncoding,
-        val lengthEncoding: DataEncoding?,
-        val children: Array<IsoField>?,
+        val lengthEncoding: DataEncoding? = null,
+        val children: Array<IsoField>? = null,
         var position: Int = 0,
         var key: Boolean = false,
 
@@ -78,7 +80,7 @@ data class FieldData(val field: IsoField, val data: ByteArray) {
 }
 
 
-fun IsoField.parse(msg: Message, buf: ByteReadChannel) {
+fun IsoField.parse(msg: Message, buf: Buffer) {
 
     when (type) {
         FieldType.Fixed -> parseFixed(this, msg, buf)
@@ -95,13 +97,14 @@ expect fun ByteArray.toHexString(): String
 expect fun fromHexString(str: String): ByteArray
 
 
-fun IsoField.parse(buf: ByteReadChannel): String {
+fun IsoField.parse(buf: Buffer): String {
 
     when (type) {
         FieldType.Fixed -> {
 
             val data = ByteArray(len)
-            buf.blockingReadAvailable(data)
+            buf.readAvailable(data)
+            println("Reading .. ${data.toHexString()}")
             return FieldData(this, data).encodeToString()
         }
 
@@ -116,21 +119,20 @@ fun Byte.isHighBitSet(): Boolean {
     return (this and 0x80.toByte()) == 0x80.toByte()
 }
 
-private fun parseBitmapped(field: IsoField, msg: Message, buf: ByteReadChannel) {
+private fun parseBitmapped(field: IsoField, msg: Message, buf: Buffer) {
 
     when (field.dataEncoding) {
         DataEncoding.BINARY -> {
 
             val bmpData = ByteArray(24);
 
-            buf.blockingReadAvailable(bmpData, 0, 8)
+            buf.readAvailable(bmpData, 0, 8)
             if (bmpData[0].isHighBitSet()) {
                 //secondary bitmap present
-                bmpData.sliceArray(IntRange(0, 7))
-                buf.blockingReadAvailable(bmpData, 8, 8)
+                buf.readAvailable(bmpData, 8, 8)
                 if (bmpData[8].isHighBitSet()) {
                     //tertiary also present
-                    buf.blockingReadAvailable(bmpData, 16, 8)
+                    buf.readAvailable(bmpData, 16, 8)
                 }
             }
             msg.setBitmap(IsoBitmap(bmpData, field, msg))
@@ -143,11 +145,11 @@ private fun parseBitmapped(field: IsoField, msg: Message, buf: ByteReadChannel) 
     }
 }
 
-private fun parseFixed(field: IsoField, msg: Message, buf: ByteReadChannel) {
+private fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
 
 
     val data = ByteArray(field.len)
-    buf.blockingReadAvailable(data)
+    buf.readAvailable(data)
     val fieldData = FieldData(field, data)
     setAndLog(msg, fieldData)
 
@@ -155,12 +157,14 @@ private fun parseFixed(field: IsoField, msg: Message, buf: ByteReadChannel) {
     if (field.hasChildren()) {
         field.children?.forEach {
             //TODO:: can rewind and try without a fresh allocation
-            val newBuf = ByteReadChannel(data)
+            val newBuf = newBuffer(data)
             it.parse(msg, newBuf)
         }
     }
 
 }
+
+
 
 internal fun setAndLog(msg: Message, fieldData: FieldData) {
     msg.setFieldData(fieldData.field, fieldData)
@@ -171,19 +175,19 @@ internal fun setAndLog(msg: Message, fieldData: FieldData) {
 }
 
 
-fun parseVariable(field: IsoField, msg: Message, buf: ByteReadChannel) {
+fun parseVariable(field: IsoField, msg: Message, buf: Buffer) {
 
 
     val len = readFieldLength(field, buf)
     val data = ByteArray(len)
 
-    buf.blockingReadAvailable(data)
+    buf.readAvailable(data)
     val fieldData = FieldData(field, data)
     setAndLog(msg, fieldData)
 
 
     if (field.hasChildren()) {
-        val newBuf = ByteReadChannel(data)
+        val newBuf = newBuffer(data)
         field.children?.forEach {
             it.parse(msg, newBuf)
         }
@@ -191,9 +195,9 @@ fun parseVariable(field: IsoField, msg: Message, buf: ByteReadChannel) {
 
 }
 
-internal fun readFieldLength(field: IsoField, buffer: ByteReadChannel): Int {
+internal fun readFieldLength(field: IsoField, buffer: Buffer): Int {
     val tmp = ByteArray(field.len)
-    buffer.blockingReadAvailable(tmp)
+    buffer.readAvailable(tmp)
 
     if (field.lengthEncoding == DataEncoding.BINARY) {
         return Charsets.toString(tmp, field.lengthEncoding).toInt(16)

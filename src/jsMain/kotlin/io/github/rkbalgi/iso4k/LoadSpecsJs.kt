@@ -5,6 +5,10 @@ import io.github.aakira.napier.Napier
 import net.mamoe.yamlkt.Yaml
 import kotlin.collections.set
 
+@JsModule("specs")
+@JsNonModule
+external fun allSpecs(): Any?
+
 /**
  * Loads spec definitions. The JS implementation uses inline YAML spec definitions or in future call
  * an external HTTP API
@@ -14,6 +18,11 @@ import kotlin.collections.set
 actual fun loadSpecs(): List<String>? {
 
     Napier.base(DebugAntilog())
+
+    var fromJS = allSpecs() as List<String>
+    for (spec in fromJS) {
+        println(spec)
+    }
 
     Napier.i("Loading Spec definitions .. ")
 

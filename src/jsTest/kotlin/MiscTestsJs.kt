@@ -8,7 +8,7 @@ import kotlin.test.*
 internal class MiscTestsJs {
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    //@OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun findMessageTest() = runTest {
 

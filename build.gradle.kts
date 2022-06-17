@@ -15,7 +15,7 @@ val logbackVersion by properties
 val guavaVersion by properties
 val projectVersion by properties
 
-val napierVersion="2.6.1"
+val napierVersion = "2.6.1"
 
 kotlin {
     jvm {
@@ -35,8 +35,6 @@ kotlin {
             }
         }
     }
-
-
 
 
     val hostOs = System.getProperty("os.name")
@@ -72,8 +70,8 @@ kotlin {
 
             }
         }
-        val jvmMain by getting{
-            dependencies{
+        val jvmMain by getting {
+            dependencies {
                 implementation("org.slf4j:slf4j-api:1.7.36")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("ch.qos.logback:logback-core:$logbackVersion")
@@ -84,8 +82,13 @@ kotlin {
             }
         }
         val jvmTest by getting
-        val jsMain by getting
-        val jsTest by getting{
+        val jsMain by getting {
+            dependencies {
+                val localPath = rootDir.absolutePath + "/src/jsMain/js/specs"
+                implementation(npm("specs", File("$localPath")))
+            }
+        }
+        val jsTest by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
             }

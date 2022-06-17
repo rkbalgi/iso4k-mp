@@ -1,10 +1,8 @@
 package io.github.rkbalgi.iso4k
 
-import io.ktor.utils.io.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.coroutines.startCoroutine
 
 
 actual fun ByteArray.toHexString(): String =
@@ -28,11 +26,3 @@ fun doWork(block: suspend () -> Unit) {
 
 }
 
-actual fun ByteReadChannel.blockingReadAvailable(data: ByteArray) {
-    //doWork { readAvailable(data) }
-
-}
-
-actual fun ByteReadChannel.blockingReadAvailable(data: ByteArray, offset: Int, len: Int) {
-    doWork { readAvailable(data, offset, len) }
-}

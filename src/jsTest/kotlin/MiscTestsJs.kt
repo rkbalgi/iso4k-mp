@@ -1,5 +1,6 @@
 import io.github.rkbalgi.iso4k.Spec
 import io.github.rkbalgi.iso4k.fromHexString
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
@@ -7,6 +8,7 @@ import kotlin.test.*
 internal class MiscTestsJs {
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun findMessageTest() = runTest {
 

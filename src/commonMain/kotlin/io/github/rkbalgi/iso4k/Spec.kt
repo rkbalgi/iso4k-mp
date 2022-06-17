@@ -1,6 +1,7 @@
 package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.Napier
+import io.github.rkbalgi.iso4k.io.newBuffer
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.Serializable
@@ -123,5 +124,5 @@ public class Spec(
 }
 
 expect fun loadSpecs(): List<String>?
-expect fun newBuffer(data: ByteArray): Buffer
+
 

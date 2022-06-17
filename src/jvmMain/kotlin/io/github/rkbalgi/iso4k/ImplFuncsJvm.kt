@@ -1,7 +1,5 @@
 package io.github.rkbalgi.iso4k
 
-import io.ktor.utils.io.*
-import kotlinx.coroutines.runBlocking
 import org.bouncycastle.util.encoders.Hex
 
 /**
@@ -22,12 +20,3 @@ actual fun fromHexString(str: String): ByteArray {
 }
 
 
-actual fun ByteReadChannel.blockingReadAvailable(data: ByteArray) {
-    runBlocking { readAvailable(data) }
-}
-
-actual fun ByteReadChannel.blockingReadAvailable(data: ByteArray, offset: Int, len: Int) {
-    runBlocking {
-        readAvailable(data, offset, len)
-    }
-}

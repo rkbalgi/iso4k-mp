@@ -2,13 +2,15 @@ package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import io.ktor.utils.io.bits.*
-import io.ktor.utils.io.core.*
 import net.mamoe.yamlkt.Yaml
-import org.khronos.webgl.ArrayBuffer
-import org.khronos.webgl.DataView
-import org.khronos.webgl.Int8Array
+import kotlin.collections.set
 
+/**
+ * Loads spec definitions. The JS implementation uses inline YAML spec definitions or in future call
+ * an external HTTP API
+ *
+ * @return List of available specs
+ */
 actual fun loadSpecs(): List<String>? {
 
     Napier.base(DebugAntilog())

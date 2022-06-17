@@ -3,7 +3,7 @@ package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.charsets.Charsets
-import io.ktor.utils.io.*
+import io.github.rkbalgi.iso4k.io.newBuffer
 import io.ktor.utils.io.core.*
 import kotlin.experimental.and
 
@@ -28,7 +28,6 @@ data class IsoField(
         val children: Array<IsoField>? = null,
         var position: Int = 0,
         var key: Boolean = false,
-
         ) {
 
 
@@ -91,8 +90,6 @@ fun IsoField.parse(msg: Message, buf: Buffer) {
 
 }
 
-expect fun ByteReadChannel.blockingReadAvailable(data: ByteArray)
-expect fun ByteReadChannel.blockingReadAvailable(data: ByteArray, offset: Int, len: Int)
 expect fun ByteArray.toHexString(): String
 expect fun fromHexString(str: String): ByteArray
 
@@ -101,13 +98,10 @@ fun IsoField.parse(buf: Buffer): String {
 
     when (type) {
         FieldType.Fixed -> {
-
             val data = ByteArray(len)
             buf.readFully(data)
             return FieldData(this, data).encodeToString()
         }
-
-
         else -> TODO("only fixed type supported for header fields")
     }
 
@@ -162,7 +156,6 @@ private fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
     }
 
 }
-
 
 
 internal fun setAndLog(msg: Message, fieldData: FieldData) {

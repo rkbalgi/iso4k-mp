@@ -1,5 +1,6 @@
 package io.github.rkbalgi.iso4k
 
+import io.github.rkbalgi.iso4k.io.newBuffer
 import io.ktor.utils.io.*
 import io.ktor.utils.io.bits.*
 import io.ktor.utils.io.core.*

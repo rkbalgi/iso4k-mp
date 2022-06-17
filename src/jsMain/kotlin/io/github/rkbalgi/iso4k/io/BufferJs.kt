@@ -1,4 +1,4 @@
-package io.github.rkbalgi.iso4k
+package io.github.rkbalgi.iso4k.io
 
 import io.ktor.utils.io.bits.*
 import io.ktor.utils.io.core.*

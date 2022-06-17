@@ -7,13 +7,20 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.Spec.Companion.specMap
-import io.ktor.utils.io.bits.*
-import io.ktor.utils.io.core.*
 import net.mamoe.yamlkt.Yaml
 import java.io.File
 import java.nio.file.Path
+import kotlin.collections.List
+import kotlin.collections.forEach
+import kotlin.collections.set
 import kotlin.io.path.readText
 
+/**
+ * Load spec definitions from YAML fields either from a location on the filesystem
+ * specified by system propery *io.github.rkbalgi.iso4k.specsLocation* or from classpath (/specs.yml)
+ *
+ * @return A list of specs available/read
+ */
 actual fun loadSpecs(): List<String>? {
 
     Napier.base(DebugAntilog())

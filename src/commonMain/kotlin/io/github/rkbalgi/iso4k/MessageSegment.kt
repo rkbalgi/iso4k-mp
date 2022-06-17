@@ -1,6 +1,8 @@
 package io.github.rkbalgi.iso4k
 
 import io.ktor.utils.io.*
+import io.ktor.utils.io.bits.*
+import io.ktor.utils.io.core.*
 
 /**
  * A MessageSegment defines the layout of structure of a message (a request or a response etc)
@@ -32,7 +34,7 @@ class MessageSegment(
 
     fun parse(msgData: ByteArray): Message {
         val msg = Message(this)
-        val msgBuf = ByteReadChannel(msgData)
+        val msgBuf = newBuffer(msgData)
         fields.forEach { it.parse(msg, msgBuf) }
         return msg
     }

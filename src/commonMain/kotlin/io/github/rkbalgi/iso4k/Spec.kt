@@ -45,7 +45,6 @@ public class Spec(
         val bb = newBuffer(msgData)
         var headerVal = headerFields.map { it.parse(bb) }.reduce { acc, a -> (acc + a) }
 
-        println("Looking for $headerVal")
         return try {
             messageSegments.first { it.selectorMatch(headerVal) }.name
         } catch (e: Exception) {

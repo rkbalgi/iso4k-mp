@@ -277,6 +277,3 @@ messageSegments:
     return listOf(decoded.name)
 }
 
-actual fun newBuffer(data: ByteArray): Buffer {
-    return Buffer(Memory(DataView(null!!,0,data.size)))
-}

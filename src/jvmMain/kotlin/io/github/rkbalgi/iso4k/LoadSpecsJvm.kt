@@ -10,7 +10,6 @@ import io.github.rkbalgi.iso4k.Spec.Companion.specMap
 import io.ktor.utils.io.bits.*
 import io.ktor.utils.io.core.*
 import net.mamoe.yamlkt.Yaml
-
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.readText
@@ -64,6 +63,3 @@ actual fun loadSpecs(): List<String>? {
     return null
 }
 
-actual fun newBuffer(data: ByteArray): Buffer {
-    return Buffer()
-}

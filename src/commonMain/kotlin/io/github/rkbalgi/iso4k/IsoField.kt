@@ -103,8 +103,7 @@ fun IsoField.parse(buf: Buffer): String {
         FieldType.Fixed -> {
 
             val data = ByteArray(len)
-            buf.readAvailable(data)
-            println("Reading .. ${data.toHexString()}")
+            buf.readFully(data)
             return FieldData(this, data).encodeToString()
         }
 

@@ -1,0 +1,11 @@
+{
+  "name": "specs",
+  "version": "1.0.0",
+  "description": "ISO spec definitions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Raghavendra Balgi",
+  "license": "ISC"
+}

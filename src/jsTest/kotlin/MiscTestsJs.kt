@@ -10,7 +10,7 @@ internal class MiscTestsJs {
 
     //@OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun findMessageTest() = runTest {
+    fun findMessageTest()   {
 
         val spec = Spec.spec("SampleSpec")
 

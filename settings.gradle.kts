@@ -1,3 +1,3 @@
 
-rootProject.name = "iso4k-mp"
+rootProject.name = "iso4k"
 

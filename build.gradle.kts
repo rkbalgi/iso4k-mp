@@ -1,10 +1,14 @@
 plugins {
     kotlin("multiplatform") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
+    id("maven-publish")
+    id("signing")
+
+    id("org.jetbrains.dokka") version "1.6.21"
 }
 
-group = "io.github"
-version = "1.0-SNAPSHOT"
+group = "io.github.rkbalgi"
+version = "0.0.2"
 
 repositories {
     mavenCentral()
@@ -16,6 +20,11 @@ val guavaVersion by properties
 val projectVersion by properties
 
 val napierVersion = "2.6.1"
+
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
+}
+
 
 kotlin {
     jvm {
@@ -96,4 +105,68 @@ kotlin {
         //val nativeMain by getting
         //val nativeTest by getting
     }
+}
+
+publishing{
+    repositories{
+        maven{
+
+            name="oss"
+            val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+
+            credentials {
+                username = properties["mavenCentralUsername"] as String
+                password = properties["mavenCentralPassword"] as String
+            }
+        }
+
+        }
+
+    publications{
+
+        withType<MavenPublication> {
+            //artifact(dokkaHtmlJar)
+            pom {
+                name.set("iso4k")
+                description.set("Kotlin Multiplatform library for ISO8583")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                url.set("http://github.com/rkbalgi/iso4k-mp")
+                issueManagement {
+                    system.set("Github")
+                    url.set("https://github.com/rkbalgi/iso4k-mp/issues")
+                }
+                scm {
+                    connection.set("https://github.com/rkbalgi/iso4k-mp.git")
+                    url.set("https://github.com/rkbalgi/iso4k-mp")
+                }
+                developers {
+                    developer {
+                        name.set("Raghavendra Balgi")
+                        email.set("rkbalgi@gmail.com")
+                    }
+                }
+                packaging="jar"
+                group="io.github.rkbalgi"
+            }
+
+        }
+
+    }
+
+    signing {
+        println(properties["signing.keyId"] as String)
+        useInMemoryPgpKeys(
+            findProperty("GPG_SIGNING_KEY") as String,
+            properties["signing.password"] as String
+        )
+        sign(publishing.publications)
+    }
+
 }

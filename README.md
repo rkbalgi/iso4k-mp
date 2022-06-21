@@ -1,10 +1,7 @@
 # iso4k-mp
 A multi-platform (JVM/JS) library to work with ISO8583 messages built using Kotlin
 
-The goal of this project is to provide a library like JPOS which can then be integrated with other applications like https://github.com/rkbalgi/keedoh or https://github.com/rkbalgi/tcptester
 
-
-The specifications will be defined in yaml files and will be borrowed from my other project (https://github.com/rkbalgi/iso8583_rs/blob/master/sample_spec/sample_spec.yaml)
 
 Glossary -
 1. A spec or specification defines message segments and header fields
@@ -13,7 +10,13 @@ Glossary -
 4. A transaction a instance of a "message" composed of a request and a response
 
 
-# Sample (WIP)
+## Demo/Examples
+
+### JS/Browser
+See https://github.com/rkbalgi/iso4k-mp-browser-example
+
+### JVM
+
 The library reads a file specs.yml from the classpath root. This specs.yml defines a list of spec files (yaml files) that
 are also present in the classpath (see src/test/resources for example)
 

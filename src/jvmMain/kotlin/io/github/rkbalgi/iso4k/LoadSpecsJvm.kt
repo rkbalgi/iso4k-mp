@@ -40,8 +40,8 @@ actual fun loadSpecs(): List<String>? {
             allSpecs = objectMapper.readValue<List<String>>(fileContent)
 
             allSpecs.forEach {
-                val fileContent = Path.of(specLocation).resolve(it).readText(Charsets.UTF_8)
-                val spec = objectMapper.readValue<Spec>(fileContent)
+                val specDef = Path.of(specLocation).resolve(it).readText(Charsets.UTF_8)
+                val spec = objectMapper.readValue<Spec>(specDef)
                 specMap[spec.name] = spec
             }
         } else {
@@ -63,7 +63,7 @@ actual fun loadSpecs(): List<String>? {
         Napier.i("Loading spec definitions from classpath")
         allSpecs = Yaml.decodeListFromString(
             resource.readText(Charsets.UTF_8)
-        ) as List<String>//objectMapper.readValue<List<String>>(Spec::javaClass.javaClass.getResource("/specs.yml"))
+        ) as List<String>
 
         allSpecs.forEach {
             Napier.i("Reading spec $it from classpath")
@@ -72,8 +72,6 @@ actual fun loadSpecs(): List<String>? {
             specMap[spec.name] = spec
         }
     }
-
-
 
     return null
 }

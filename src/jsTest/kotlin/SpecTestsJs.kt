@@ -15,7 +15,7 @@ class SpecTestsJs {
         msg.fields.first { it.name == "bitmap" }.apply {
             children?.forEach { println(it.name) }
             var child = children!!.first { it.name == "proc_code" }
-            assertTrue { child?.parent == this }
+            assertTrue { child.parent == this }
         }
 
 

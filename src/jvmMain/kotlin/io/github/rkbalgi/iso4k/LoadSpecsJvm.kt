@@ -10,8 +10,6 @@ import io.github.rkbalgi.iso4k.Spec.Companion.specMap
 import net.mamoe.yamlkt.Yaml
 import java.io.File
 import java.nio.file.Path
-import kotlin.collections.List
-import kotlin.collections.forEach
 import kotlin.collections.set
 import kotlin.io.path.readText
 
@@ -51,10 +49,20 @@ actual fun loadSpecs(): List<String>? {
         }
 
     } else {
+
+
         //try to read from classpath
+
+        val resource = Spec::javaClass.javaClass.getResource("/specs.yml")
+        if (resource == null) {
+            Napier.w { "specs.yml not found in classpath, No specs loaded" }
+            return emptyList()
+        }
+
+
         Napier.i("Loading spec definitions from classpath")
         allSpecs = Yaml.decodeListFromString(
-            Spec::javaClass.javaClass.getResource("/specs.yml").readText(Charsets.UTF_8)
+            resource.readText(Charsets.UTF_8)
         ) as List<String>//objectMapper.readValue<List<String>>(Spec::javaClass.javaClass.getResource("/specs.yml"))
 
         allSpecs.forEach {

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.rkbalgi"
-version = "0.0.2"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
@@ -43,16 +43,6 @@ kotlin {
                 cssSupport.enabled = true
             }
         }
-    }
-
-
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
 
@@ -102,16 +92,15 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
             }
         }
-        //val nativeMain by getting
-        //val nativeTest by getting
+
     }
 }
 
-publishing{
-    repositories{
-        maven{
+publishing {
+    repositories {
+        maven {
 
-            name="oss"
+            name = "oss"
             val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
@@ -122,12 +111,20 @@ publishing{
             }
         }
 
-        }
+    }
 
-    publications{
+    val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+    val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+        dependsOn(dokkaHtml)
+        archiveClassifier.set("javadoc")
+        from(dokkaHtml.outputDirectory)
+    }
+
+    publications {
 
         withType<MavenPublication> {
-            //artifact(dokkaHtmlJar)
+            artifact(javadocJar)
             pom {
                 name.set("iso4k")
                 description.set("Kotlin Multiplatform library for ISO8583")
@@ -152,8 +149,8 @@ publishing{
                         email.set("rkbalgi@gmail.com")
                     }
                 }
-                packaging="jar"
-                group="io.github.rkbalgi"
+                packaging = "jar"
+                group = "io.github.rkbalgi"
             }
 
         }
@@ -161,7 +158,6 @@ publishing{
     }
 
     signing {
-        println(properties["signing.keyId"] as String)
         useInMemoryPgpKeys(
             findProperty("GPG_SIGNING_KEY") as String,
             properties["signing.password"] as String

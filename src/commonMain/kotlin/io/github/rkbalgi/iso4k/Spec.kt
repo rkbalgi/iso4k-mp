@@ -2,9 +2,8 @@ package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.io.newBuffer
-import io.ktor.utils.io.*
-import io.ktor.utils.io.core.*
 import kotlinx.serialization.Serializable
+import net.mamoe.yamlkt.Yaml
 
 
 const val specLocationProperty = "io.github.rkbalgi.iso4k.specsLocation"
@@ -59,7 +58,25 @@ public class Spec(
         requestResponseMTIMapping.forEach {
             req2responseMap[it.requestMTI] = it.responseMTI
         }
-        messageSegments.forEach { it.setSpec(this) }
+        messageSegments.forEach { messageSegment ->
+            messageSegment.setSpec(this)
+            messageSegment.fields.forEach {
+                it.parent = null
+                linkChildren(it)
+            }
+        }
+
+    }
+
+    private fun linkChildren(field: IsoField) {
+
+        if (field.hasChildren()) {
+            field.children?.forEach {
+                it.parent = field
+                linkChildren(it)
+            }
+        }
+
     }
 
     fun isRequest(mti: String): Boolean = req2responseMap.containsKey(mti)
@@ -118,11 +135,26 @@ public class Spec(
             throw RuntimeException("iso4k not initialized")
 
         }
+
+        /**
+         * Add a new spec given it's YAML definition
+         * @param specDefinition The YAML definition of the spec
+         */
+        fun addSpec(specDefinition: String) {
+
+            var decoded = Yaml.decodeFromString(
+                Spec.serializer(), specDefinition
+            )
+            Napier.i { "Adding spec - ${decoded.name}" }
+            specMap[decoded.name] = decoded
+        }
     }
 
 
 }
 
 expect fun loadSpecs(): List<String>?
+
+
 
 

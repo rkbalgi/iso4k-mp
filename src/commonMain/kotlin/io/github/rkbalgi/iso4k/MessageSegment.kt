@@ -14,7 +14,7 @@ class MessageSegment(
         val id: Int,
         val name: String,
         private val selectors: List<String>,
-        private val fields: List<IsoField>
+        val fields: List<IsoField>
 ) {
 
     private var spec: Spec? = null

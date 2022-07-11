@@ -1,5 +1,7 @@
 package io.github.rkbalgi.iso4k.charsets
 
+import io.github.rkbalgi.iso4k.fromHexString
+
 var ascii2ebcdic = mutableMapOf<Int, Int>()
 var ebcdic2ascii = mutableMapOf<Int, Int>()
 
@@ -68,6 +70,7 @@ internal fun convertE2A(data: ByteArray): ByteArray {
     var i = 0
 
     data.forEach {
+
         if (ebcdic2ascii.containsKey(0xff and it.toInt())) {
             res[i++] = ebcdic2ascii[it.toInt() and 0xff]!!.toByte()
         } else {
@@ -77,6 +80,7 @@ internal fun convertE2A(data: ByteArray): ByteArray {
     return res
 
 }
+
 // only converts letters and numbers
 // TODO:: add supports for other characters
 internal fun initMaps() {
@@ -144,6 +148,7 @@ internal fun initMaps() {
     ascii2ebcdic[0x59] = 0xe8;
     ascii2ebcdic[0x5a] = 0xe9;
 
+
 //ebcdic to ascii map
     ebcdic2ascii[0xf0] = 0x30;
     ebcdic2ascii[0xf1] = 0x31;
@@ -207,6 +212,19 @@ internal fun initMaps() {
     ebcdic2ascii[0xe7] = 0x58;
     ebcdic2ascii[0xe8] = 0x59;
     ebcdic2ascii[0xe9] = 0x5a;
+
+    // other printable chars
+    val otherCharsAscii = fromHexString( "202122232425262728292a2b2c2d2e2f3a3b3c3d3e3f405b5c5d5e5f607b7c7d7e")
+    val otherCharsEbcdic = fromHexString("405a7f7b5b6c507d4d5d5c4e6b604b617a5e4c7e6e6f7cbae0bbb06d79c04fd0a1")
+    otherCharsAscii.forEachIndexed { i, b ->
+        ascii2ebcdic[0xff and (b as Int)] = 0xff and (otherCharsEbcdic[i] as Int)
+    }
+    otherCharsEbcdic.forEachIndexed { i, b ->
+        ebcdic2ascii[0xff and (b as Int)] = 0xff and (otherCharsAscii[i] as Int)
+    }
+
+
+
 
     init = true
 }

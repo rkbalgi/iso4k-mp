@@ -28,8 +28,9 @@ data class IsoField(
         val children: Array<IsoField>? = null,
         var position: Int = 0,
         var key: Boolean = false,
-        ) {
+) {
 
+    var parent: IsoField? = null
 
     fun hasChildren(): Boolean {
         return children != null && children.isNotEmpty()

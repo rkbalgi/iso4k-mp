@@ -2,6 +2,7 @@ package io.github.rkbalgi.iso4k
 
 import io.github.rkbalgi.iso4k.Spec
 import io.github.rkbalgi.iso4k.fromHexString
+import java.nio.charset.Charset
 
 import kotlin.test.Test
 
@@ -50,6 +51,19 @@ internal class MiscTests {
         assertTrue { spec.isRequest("1100") }
         assertTrue { spec.isResponse("1110") }
         assertTrue { spec.responseMTI("1420") == "1430" }
+    }
+
+
+    @Test
+    fun test_ebcdic2asii_mapping(){
+        val data=fromHexString("2122232425262728292a2b2c2d2e2f3a3b3c3d3e3f405b5c5d5e5f607b7c7d7e")
+        var str = String(data, Charsets.US_ASCII)
+        var buf = Charset.forName("cp037").encode(str)
+
+        println(str)
+        println(buf.array().toHexString())
+
+
     }
 
 }

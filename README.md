@@ -18,7 +18,7 @@ See https://github.com/rkbalgi/iso4k-mp-browser-example
 ### JVM
 
 The library reads a file specs.yml from the classpath root. This specs.yml defines a list of spec files (yaml files) that
-are also present in the classpath (see src/test/resources for example)
+are also present in the classpath (see io.github.rkbalgi.iso4k.MiscTests.yamlTest for example)
 
 ```kotlin
         val spec = Spec.spec("SampleSpec")

@@ -52,7 +52,25 @@ module.exports = function allSpecs()  {
                             len: 6
                             dataEncoding: ASCII
                             position: 3
-
+                            children:
+                              - id: 41
+                                name: df3.transaction_type
+                                type: Fixed
+                                len: 2
+                                dataEncoding: ASCII
+                                position: 0
+                              - id: 42
+                                name: df3.from_account
+                                type: Fixed
+                                len: 2
+                                dataEncoding: ASCII
+                                position: 0
+                              - id: 43
+                                name: df3.to_account
+                                type: Fixed
+                                len: 2
+                                dataEncoding: ASCII
+                                position: 0
                           - name: "amount"
                             id: 8
                             type: Fixed

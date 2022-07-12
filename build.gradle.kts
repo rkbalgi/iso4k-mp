@@ -1,3 +1,5 @@
+import java.time.Duration
+
 plugins {
     kotlin("multiplatform") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
@@ -8,7 +10,7 @@ plugins {
 }
 
 group = "io.github.rkbalgi"
-version = "0.0.4"
+version = "0.0.5"
 
 repositories {
     mavenCentral()
@@ -41,6 +43,14 @@ kotlin {
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
+            }
+
+            testTask {
+                useMocha {
+                    timeout="5000"
+
+                }
+
             }
         }
     }

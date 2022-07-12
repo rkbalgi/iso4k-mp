@@ -1,5 +1,10 @@
 package io.github.rkbalgi.iso4k
 
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+
 class Message(val messageSegment: MessageSegment) {
 
     private var bitmap: IsoBitmap = IsoBitmap(ByteArray(24), null, null)
@@ -30,8 +35,46 @@ class Message(val messageSegment: MessageSegment) {
         } else {
             null
         }
+    }
+
+    fun encodeToJson(): JsonObject {
+
+        return buildJsonObject {
+            messageSegment.fields.forEach {
+                if (fieldDataMap.containsKey(it)) {
+                    put(it.name, fieldAsJson(it))
+                }
+            }
+        }
+    }
+
+    private fun fieldAsJson(isoField: IsoField): JsonElement {
+
+        if (!isoField.hasChildren()) {
+            return JsonPrimitive(fieldDataMap[isoField]?.encodeToString())
+        }
+
+        return buildJsonObject {
+
+            put(isoField.name, JsonPrimitive(fieldDataMap[isoField]?.encodeToString()))
+            put("subFields", buildJsonObject {
+                isoField.children?.forEach { subField ->
+                    if (isoField.type == FieldType.Bitmapped && bitmap.field == isoField) {
+                        if (bitmap.isOn(subField.position)) {
+                            put(subField.name, fieldAsJson(subField))
+                        }
+                    } else {
+                        // other kinds of parent-child fields
+                        if (fieldDataMap.containsKey(subField)) {
+                            put(subField.name, fieldAsJson(subField))
+                        }
+                    }
+
+                }
+            })
 
 
+        }
     }
 
 

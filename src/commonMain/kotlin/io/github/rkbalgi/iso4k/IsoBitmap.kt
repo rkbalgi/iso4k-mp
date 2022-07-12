@@ -29,7 +29,7 @@ fun fromBytes(data: ByteArray): Long {
 
 }
 
-class IsoBitmap(private val bmpData: ByteArray, private var field: IsoField?, msg: Message?) {
+class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Message?) {
 
     private var l1: Long = fromBytes(bmpData.sliceArray(0..7))
     private var l2: Long = fromBytes(bmpData.sliceArray(8..15))
@@ -115,8 +115,6 @@ class IsoBitmap(private val bmpData: ByteArray, private var field: IsoField?, ms
     }
 
     fun get(pos: Int): FieldData? {
-
-        println(msg?.fieldDataMap)
 
         try {
             var res = this.field!!.children?.first { it.position == pos }

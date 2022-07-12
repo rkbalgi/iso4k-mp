@@ -3,7 +3,6 @@ package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.charsets.Charsets
-import io.github.rkbalgi.iso4k.io.newBuffer
 import io.ktor.utils.io.core.*
 import kotlin.experimental.and
 
@@ -149,10 +148,9 @@ private fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
 
 
     if (field.hasChildren()) {
+        buf.rewind(field.len)
         field.children?.forEach {
-            //TODO:: can rewind and try without a fresh allocation
-            val newBuf = newBuffer(data)
-            it.parse(msg, newBuf)
+            it.parse(msg, buf)
         }
     }
 
@@ -180,10 +178,9 @@ fun parseVariable(field: IsoField, msg: Message, buf: Buffer) {
 
 
     if (field.hasChildren()) {
-        val newBuf = newBuffer(data)
-        field.children?.forEach {
-            it.parse(msg, newBuf)
-        }
+        //FIXME:: Parsing children of variable fields  should be left to custom "field-parsers"
+        TODO("variable fields with children not supported")
+
     }
 
 }

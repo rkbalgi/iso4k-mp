@@ -1,16 +1,10 @@
 package io.github.rkbalgi.iso4k
 
-import io.github.rkbalgi.iso4k.Spec
-import io.github.rkbalgi.iso4k.fromHexString
+
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.nio.charset.Charset
-
-import kotlin.test.Test
-
-
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 
 internal class MiscTests {
@@ -43,6 +37,9 @@ internal class MiscTests {
         assertEquals("reserved_1", msg.bitmap().get(61)?.encodeToString())
 
 
+        println(Json { prettyPrint = true }.encodeToString(msg.encodeToJson()))
+
+
     }
 
     @Test
@@ -55,8 +52,8 @@ internal class MiscTests {
 
 
     @Test
-    fun test_ebcdic2asii_mapping(){
-        val data=fromHexString("2122232425262728292a2b2c2d2e2f3a3b3c3d3e3f405b5c5d5e5f607b7c7d7e")
+    fun test_ebcdic2asii_mapping() {
+        val data = fromHexString("2122232425262728292a2b2c2d2e2f3a3b3c3d3e3f405b5c5d5e5f607b7c7d7e")
         var str = String(data, Charsets.US_ASCII)
         var buf = Charset.forName("cp037").encode(str)
 

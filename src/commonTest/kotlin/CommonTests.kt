@@ -1,0 +1,48 @@
+package io.github.rkbalgi.iso4k
+
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+
+class CommonTests {
+
+    @Test
+    fun test_message_parsing() {
+
+        val spec = Spec.spec("SampleSpec")
+
+        val msgData =
+            fromHexString("31313030f02420000000100e000000010000000131363435363739303938343536373132333530303430303030303030303030303030323937373935383132323034f8f4f077fcbd9ffc0dfa6f001072657365727665645f310a9985a28599a5858460f2f0f1f1383738373736323235323531323334e47006f5de8c70b9")
+        val msg = spec?.message("1100/1110 - Authorization")?.parse(msgData)
+
+
+        assertNotNull(msg)
+        println(Json { prettyPrint = true }.encodeToString(msg.encodeToJson()))
+
+        assertEquals("1100", msg.get("message_type")?.encodeToString())
+        assertEquals("004000", msg.bitmap().get(3)?.encodeToString())
+        assertEquals("reserved_1", msg.bitmap().get(61)?.encodeToString())
+
+
+
+
+    }
+
+    @Test
+    fun test_field_parent_linkup() {
+
+        //loadSpecs()
+        var msg = Spec.spec("SampleSpec")?.message("1100/1110 - Authorization")
+        assertNotNull(msg)
+
+        msg.fields.first { it.name == "bitmap" }.apply {
+            var child = children?.first { it.name == "proc_code" }
+            assertTrue { child?.parent == this }
+        }
+
+
+    }
+}

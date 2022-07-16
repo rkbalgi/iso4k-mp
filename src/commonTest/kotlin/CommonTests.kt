@@ -19,14 +19,29 @@ class CommonTests {
         val msg = spec?.message("1100/1110 - Authorization")?.parse(msgData)
 
 
-        assertNotNull(msg)
-        println(Json { prettyPrint = true }.encodeToString(msg.encodeToJson()))
+        msg.run {
+            assertNotNull(this)
+            println(Json { prettyPrint = true }.encodeToString(encodeToJson()))
 
-        assertEquals("1100", msg.get("message_type")?.encodeToString())
-        assertEquals("004000", msg.bitmap().get(3)?.encodeToString())
-        assertEquals("reserved_1", msg.bitmap().get(61)?.encodeToString())
+            assertEquals("1100", this.get("message_type")?.encodeToString())
+            assertEquals("004000", this.bitmap().get(3)?.encodeToString())
+            assertEquals("reserved_1", this.bitmap().get(61)?.encodeToString())
+        }
 
+        // changing the msg
+        msg.run {
 
+            assertNotNull(this)
+            // changing the msg
+            fieldData("message_type", "1110")
+            bitmap().setOn(38, "AP1234")
+            bitmap().setOn(39, "000")
+
+            println(Json { prettyPrint = true }.encodeToString(encodeToJson()))
+
+        }
+
+        println(msg?.bytes()?.toHexString())
 
 
     }

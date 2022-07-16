@@ -6,3 +6,7 @@ import io.ktor.utils.io.core.*
 actual fun newBuffer(data: ByteArray): Buffer {
     return Buffer(Memory.of(data)).also { it.resetForRead() }
 }
+
+actual fun newBuffer(): Buffer {
+    return Buffer(Memory.Empty).also { it.resetForRead() }
+}

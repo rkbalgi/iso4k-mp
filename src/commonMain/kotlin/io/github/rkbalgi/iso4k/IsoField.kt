@@ -3,6 +3,7 @@ package io.github.rkbalgi.iso4k
 
 import io.github.aakira.napier.Napier
 import io.github.rkbalgi.iso4k.charsets.Charsets
+import io.github.rkbalgi.iso4k.io.newBuffer
 import io.ktor.utils.io.core.*
 import kotlin.experimental.and
 
@@ -49,6 +50,27 @@ data class IsoField(
 
     override fun hashCode(): Int {
         return id.hashCode() + name.hashCode()
+    }
+
+    fun fieldData(msg: Message): ByteArray? {
+
+        if (!hasChildren()) {
+            return msg.get(this.name)?.data
+        } else {
+
+            val buf = newBuffer()
+
+            children?.forEach {
+                if (msg.fieldDataMap.containsKey(it)) {
+                    buf.writeFully(it.fieldData(msg)!!)
+                }
+
+            }
+
+            return buf.readBytes(buf.writePosition)
+
+
+        }
     }
 
 
@@ -158,7 +180,7 @@ private fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
 
 
 internal fun setAndLog(msg: Message, fieldData: FieldData) {
-    msg.setFieldData(fieldData.field, fieldData)
+    msg.fieldData(fieldData.field, fieldData)
     Napier.d(
         "field ${fieldData.field.name}: data(raw): ${fieldData.data.toHexString()} data(encoded): ${fieldData.encodeToString()}"
     )

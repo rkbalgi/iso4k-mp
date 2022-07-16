@@ -43,6 +43,11 @@ class CommonTests {
 
         println(msg?.bytes()?.toHexString())
 
+        val msg2 = spec?.message("1100/1110 - Authorization")?.parse(msg!!.bytes())
+
+
+
+
 
     }
 

@@ -52,52 +52,37 @@ data class IsoField(
         return id.hashCode() + name.hashCode()
     }
 
-    fun fieldData(msg: Message): ByteArray? {
+    fun fieldData(msg: Message): ByteArray {
 
-        if (!hasChildren()) {
-            return msg.get(this.name)?.data
-        } else {
+        val buf = newBuffer()
 
-            val buf = newBuffer()
 
+        if (this.type == FieldType.Bitmapped) {
+            buf.writeFully(msg.fieldDataMap[this]!!.data())
+        }
+
+        if (hasChildren()) {
             children?.forEach {
                 if (msg.fieldDataMap.containsKey(it)) {
-                    buf.writeFully(it.fieldData(msg)!!)
+                    buf.writeFully(it.fieldData(msg))
                 }
-
             }
 
-            return buf.readBytes(buf.writePosition)
+        } else {
+            buf.writeFully(msg.fieldDataMap[this]!!.data())
+        }
 
 
+        return buf.run {
+            val pos = buf.writePosition;
+            resetForRead()
+            val buf2 = readBytes(pos)
+            println(buf2.toHexString())
+            buf2
         }
     }
 
 
-}
-
-data class FieldData(val field: IsoField, val data: ByteArray) {
-    fun encodeToString(): String {
-        return Charsets.toString(data, field.dataEncoding)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as FieldData
-
-        if (field != other.field) return false
-        if (!data.contentEquals(other.data)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = field.hashCode()
-        result = 31 * result + data.contentHashCode()
-        return result
-    }
 }
 
 
@@ -182,7 +167,9 @@ private fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
 internal fun setAndLog(msg: Message, fieldData: FieldData) {
     msg.fieldData(fieldData.field, fieldData)
     Napier.d(
-        "field ${fieldData.field.name}: data(raw): ${fieldData.data.toHexString()} data(encoded): ${fieldData.encodeToString()}"
+        "field ${fieldData.field.name}: data(raw): ${
+            fieldData.data().toHexString()
+        } data(encoded): ${fieldData.encodeToString()}"
     )
 
 }

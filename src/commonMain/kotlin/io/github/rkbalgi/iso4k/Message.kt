@@ -128,11 +128,9 @@ class Message(val messageSegment: MessageSegment) {
     fun bytes(): ByteArray {
 
         val outBuf = newBuffer()
-
         messageSegment.fields.forEach {
             appendFieldData(outBuf, it)
         }
-
         return outBuf.readBytes(outBuf.writePosition)
     }
 

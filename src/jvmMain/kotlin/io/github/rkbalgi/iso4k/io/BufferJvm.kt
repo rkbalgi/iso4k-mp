@@ -9,5 +9,5 @@ actual fun newBuffer(data: ByteArray): Buffer {
 }
 
 actual fun newBuffer(): Buffer {
-    return Buffer(Memory.of(ByteBuffer.allocate(1024).also { it.position(0) }))
+    return Buffer(Memory.of(ByteBuffer.allocate(1024))).also { it.resetForWrite() }
 }

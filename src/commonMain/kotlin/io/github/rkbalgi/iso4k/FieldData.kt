@@ -40,6 +40,18 @@ data class FieldData(val field: IsoField, private val data: ByteArray) {
             }
 
             buf.readBytes(pos)
+        } else if (field.type == FieldType.Bitmapped) {
+            if (data.sliceArray(16..23) contentEquals ByteArray(8)) {
+                if (data.sliceArray(8..15) contentEquals ByteArray(8)) {
+                    data.sliceArray(0..7)
+                } else {
+                    data.sliceArray(0..15)
+                }
+            } else {
+                data
+            }
+
+
         } else {
             data
         }

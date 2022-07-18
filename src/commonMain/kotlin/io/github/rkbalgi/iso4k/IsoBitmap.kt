@@ -1,6 +1,7 @@
 package io.github.rkbalgi.iso4k
 
 import io.github.rkbalgi.iso4k.charsets.Charsets
+import io.github.rkbalgi.iso4k.io.newBuffer
 
 fun Long.toBytes(): ByteArray {
 
@@ -88,7 +89,7 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
     }
 
     /**
-     * @return the bytes that make up the bitmap
+     * @return The bytes that make up the bitmap
      */
     fun bytes(): ByteArray {
         val bmpData = ByteArray(24)
@@ -142,12 +143,21 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
 
     private fun setOn(pos: Int, fieldValue: ByteArray) {
 
+
+
         try {
             val childField = field!!.children!!.first { it.position == pos }
+            childField.checkConstraints(fieldValue)
+
             msg!!.fieldDataMap[childField] =
                 FieldData(childField, fieldValue)
             setOn(pos)
             msg!!.fieldDataMap[field!!] = FieldData(field!!, bytes())
+
+            if (childField.type == FieldType.Fixed) {
+                parseFixed(childField, msg!!, newBuffer(fieldValue))
+            }
+
         } catch (e: NoSuchElementException) {
             throw RuntimeException("No field defined at position $pos")
         }

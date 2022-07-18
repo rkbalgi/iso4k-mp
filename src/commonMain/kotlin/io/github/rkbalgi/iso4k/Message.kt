@@ -18,17 +18,39 @@ class Message(val messageSegment: MessageSegment) {
         fieldDataMap[field] = fieldData
     }
 
+    /**
+     * Set the field's data using the String value (by converting it into a ByteArray using the field encoding)
+     */
     fun fieldData(fieldName: String, fieldValue: String) {
         val field = fieldByName(fieldName) ?: throw RuntimeException("No field found with name - $fieldName")
-        fieldDataMap[field] = FieldData(field, Charsets.fromString(fieldValue, field.dataEncoding))
+        val rawData = Charsets.fromString(fieldValue, field.dataEncoding)
+        setFieldData(field, rawData)
+
+
     }
 
+    private fun setFieldData(field: IsoField, rawData: ByteArray) {
+
+        field.checkConstraints(rawData)
+        if (field.type == FieldType.Fixed) {
+            //we support subfields for Fixed
+            parseFixed(field, this, newBuffer(rawData))
+        } else {
+            fieldDataMap[field] = FieldData(field, rawData)
+        }
+
+
+    }
+
+    /**
+     * Set the field's data using the raw ByteArray
+     */
     fun fieldData(fieldName: String, fieldValue: ByteArray) {
         val field = fieldByName(fieldName) ?: throw RuntimeException("No field found with name - $fieldName")
-        fieldDataMap[field] = FieldData(field, fieldValue)
+        setFieldData(field, fieldValue)
     }
 
-    internal fun fieldByName(fieldName: String): IsoField? {
+    private fun fieldByName(fieldName: String): IsoField? {
         messageSegment.fields.forEach {
             if (it.name == fieldName) {
                 return it
@@ -69,7 +91,7 @@ class Message(val messageSegment: MessageSegment) {
     /**
      * @param bitmap the bitmap to be used with this message
      */
-    fun setBitmap(bitmap: IsoBitmap) {
+    fun bitmap(bitmap: IsoBitmap) {
         this.bitmap = bitmap
     }
 

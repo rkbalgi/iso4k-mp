@@ -153,7 +153,7 @@ public class Spec(
 
 }
 
-expect fun loadSpecs(): List<String>?
+expect fun loadSpecs(): List<String>
 
 
 

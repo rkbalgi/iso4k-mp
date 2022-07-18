@@ -93,8 +93,8 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                val localPath = rootDir.absolutePath + "/src/jsMain/js/specs"
-                implementation(npm("specs", File("$localPath")))
+//                val localPath = rootDir.absolutePath + "/src/jsMain/js/specs"
+//                implementation(npm("specs", File("$localPath")))
             }
         }
         val jsTest by getting {

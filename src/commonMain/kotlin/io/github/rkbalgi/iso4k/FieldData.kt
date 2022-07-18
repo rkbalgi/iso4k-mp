@@ -6,7 +6,11 @@ import io.ktor.utils.io.core.*
 
 data class FieldData(val field: IsoField, private val data: ByteArray) {
     fun encodeToString(): String {
-        return Charsets.toString(data, field.dataEncoding)
+        var rawData = data()
+        if (field.type == FieldType.Variable) {
+            rawData = rawData.sliceArray((field.len) until rawData.size)
+        }
+        return Charsets.toString(rawData, field.dataEncoding)
     }
 
     override fun equals(other: Any?): Boolean {

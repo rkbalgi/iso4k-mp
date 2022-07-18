@@ -81,6 +81,15 @@ data class IsoField(
         }
     }
 
+    /**
+     * Run some internal checks like field lengths etc
+     */
+    internal fun checkConstraints(fieldValue: ByteArray) {
+        if (type == FieldType.Fixed && fieldValue.size != len) {
+            throw IllegalArgumentException("data length of ${fieldValue.size} exceeds max size of $len supported for field - $name")
+        }
+    }
+
 
 }
 
@@ -134,7 +143,7 @@ private fun parseBitmapped(field: IsoField, msg: Message, buf: Buffer) {
                     buf.readAvailable(bmpData, 16, 8)
                 }
             }
-            msg.setBitmap(IsoBitmap(bmpData, field, msg))
+            msg.bitmap(IsoBitmap(bmpData, field, msg))
             setAndLog(msg, FieldData(field, bmpData))
             field.children?.filter { it.position > 0 && msg.bitmap().isOn(it.position) }?.forEach { it.parse(msg, buf) }
         }
@@ -144,7 +153,7 @@ private fun parseBitmapped(field: IsoField, msg: Message, buf: Buffer) {
     }
 }
 
-private fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
+internal fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
 
 
     val data = ByteArray(field.len)
@@ -174,7 +183,7 @@ internal fun setAndLog(msg: Message, fieldData: FieldData) {
 }
 
 
-fun parseVariable(field: IsoField, msg: Message, buf: Buffer) {
+internal fun parseVariable(field: IsoField, msg: Message, buf: Buffer) {
 
 
     val len = readFieldLength(field, buf)

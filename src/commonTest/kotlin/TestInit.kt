@@ -1,9 +1,9 @@
-'use strict';
+package io.github.rkbalgi.iso4k
 
+fun addSpecsForTests(){
 
-module.exports = function allSpecs()  {
-
-                let sampleSpec=`
+    println("Adding Spec .. ")
+    Spec.addSpec("""
                 name: SampleSpec
                 id: 3
                 requestResponseMTIMapping:
@@ -270,12 +270,6 @@ module.exports = function allSpecs()  {
                             len: 4
                             dataEncoding: ASCII
                             position: 160
-               `;
+        """.trimIndent())
 
-               return [sampleSpec];
-               }
-
-
-
-
-
+}

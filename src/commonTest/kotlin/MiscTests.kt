@@ -1,12 +1,15 @@
-import io.github.rkbalgi.iso4k.Spec
-import io.github.rkbalgi.iso4k.fromHexString
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+package io.github.rkbalgi.iso4k
+
 import kotlin.test.*
 
+class MiscTests {
 
-internal class MiscTestsJs {
 
+
+    @BeforeTest
+    fun testInit(){
+        addSpecsForTests()
+    }
 
     //@OptIn(ExperimentalCoroutinesApi::class)
     @Test
@@ -47,6 +50,4 @@ internal class MiscTestsJs {
         assertTrue { spec.isResponse("1110") }
         assertTrue { spec.responseMTI("1420") == "1430" }
     }
-
 }
-

@@ -2,12 +2,41 @@ package io.github.rkbalgi.iso4k
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class CommonTests {
+
+
+
+    @BeforeTest
+    fun testInit(){
+        addSpecsForTests()
+    }
+
+    @Test
+    fun test_create_msg_scratch() {
+
+        val spec = Spec.spec("SampleSpec")!!
+        val msgSegment = spec.message("1100/1110 - Authorization")!!
+
+        val msg = msgSegment.blankMessage()
+        msg.apply {
+            fieldData("message_type", "1100")
+            bitmap().apply {
+                setOn(3, "002000")
+                setOn(4, "000000002200")
+                setOn(96, "ABCD")
+                setOn(64, "01020304abcdef12")
+            }
+        }
+        assertEquals(
+            "31313030b000000000000001000000010000000030303230303030303030303030303232303001020304abcdef1241424344",
+            msg.bytes().toHexString()
+        )
+        println(Json { prettyPrint = true }.encodeToString(msg.encodeToJson()))
+
+
+    }
 
     @Test
     fun test_message_parsing() {

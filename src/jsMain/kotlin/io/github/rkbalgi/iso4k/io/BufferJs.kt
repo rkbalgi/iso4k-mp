@@ -8,5 +8,5 @@ actual fun newBuffer(data: ByteArray): Buffer {
 }
 
 actual fun newBuffer(): Buffer {
-    return Buffer(Memory.Empty).also { it.resetForRead() }
+    return Buffer(Memory.of(ByteArray(1024))).also { it.resetForWrite() }
 }

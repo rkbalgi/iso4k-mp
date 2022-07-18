@@ -19,7 +19,7 @@ import kotlin.io.path.readText
  *
  * @return A list of specs available/read
  */
-actual fun loadSpecs(): List<String>? {
+actual fun loadSpecs(): List<String> {
 
     Napier.base(DebugAntilog())
 
@@ -73,6 +73,6 @@ actual fun loadSpecs(): List<String>? {
         }
     }
 
-    return null
+    return emptyList()
 }
 

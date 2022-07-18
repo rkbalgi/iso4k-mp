@@ -7,7 +7,7 @@ import java.nio.charset.Charset
 import kotlin.test.*
 
 
-internal class MiscTests {
+internal class MiscTestsJvm {
 
 
     @Test

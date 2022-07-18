@@ -1,9 +1,6 @@
 package io.github.rkbalgi.iso4k
 
 import io.github.rkbalgi.iso4k.io.newBuffer
-import io.ktor.utils.io.*
-import io.ktor.utils.io.bits.*
-import io.ktor.utils.io.core.*
 
 /**
  * A MessageSegment defines the layout of structure of a message (a request or a response etc)
@@ -41,7 +38,22 @@ class MessageSegment(
     }
 
     fun setSpec(spec: Spec) {
-        this.spec=spec
+        this.spec = spec
+    }
+
+    /**
+     * Builds and returns a new blank Message
+     *
+     * @return A new blank message
+     */
+    fun blankMessage(): Message {
+        val msg = Message(this)
+        var bitmapField =
+            this.fields.first { it -> it.type == FieldType.Bitmapped } //There can only be one top level field of type Bitmapped ??
+        msg.bitmap(IsoBitmap(ByteArray(24), bitmapField, msg))
+
+        return msg
+
     }
 
 }

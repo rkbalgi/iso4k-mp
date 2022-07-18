@@ -19,6 +19,10 @@ class CommonTests {
         val msg = spec?.message("1100/1110 - Authorization")?.parse(msgData)
 
 
+        //
+        val jsonConfig = Json {
+            prettyPrint = true
+        }
         msg.run {
             assertNotNull(this)
             println(Json { prettyPrint = true }.encodeToString(encodeToJson()))
@@ -36,18 +40,16 @@ class CommonTests {
             fieldData("message_type", "1110")
             bitmap().setOn(38, "AP1234")
             bitmap().setOn(39, "000")
-
+            println("Assembled Trace => " + msg?.bytes()?.toHexString())
             println(Json { prettyPrint = true }.encodeToString(encodeToJson()))
 
         }
 
-        println("-->"+msg?.bytes()?.toHexString())
 
-        val msg2 = spec?.message("1100/1110 - Authorization")?.parse(msg!!.bytes())
-
-
-
-
+        // parse the assembled message and assert
+        val assembledMsg = spec?.message("1100/1110 - Authorization")?.parse(msg!!.bytes())
+        println("----------Assembled Message --------\n" + jsonConfig.encodeToString(assembledMsg?.encodeToJson()))
+        assertEquals(msg?.encodeToJson(), assembledMsg?.encodeToJson())
 
     }
 

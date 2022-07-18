@@ -76,9 +76,8 @@ data class IsoField(
         return buf.run {
             val pos = buf.writePosition;
             resetForRead()
-            val buf2 = readBytes(pos)
-            println(buf2.toHexString())
-            buf2
+            readBytes(pos)
+
         }
     }
 

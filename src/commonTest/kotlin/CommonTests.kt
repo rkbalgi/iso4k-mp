@@ -7,9 +7,8 @@ import kotlin.test.*
 class CommonTests {
 
 
-
     @BeforeTest
-    fun testInit(){
+    fun testInit() {
         addSpecsForTests()
     }
 

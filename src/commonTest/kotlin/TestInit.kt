@@ -1,9 +1,10 @@
 package io.github.rkbalgi.iso4k
 
-fun addSpecsForTests(){
+fun addSpecsForTests() {
 
     println("Adding Spec .. ")
-    Spec.addSpec("""
+    Spec.addSpec(
+        """
                 name: SampleSpec
                 id: 3
                 requestResponseMTIMapping:
@@ -270,6 +271,7 @@ fun addSpecsForTests(){
                             len: 4
                             dataEncoding: ASCII
                             position: 160
-        """.trimIndent())
+        """.trimIndent()
+    )
 
 }

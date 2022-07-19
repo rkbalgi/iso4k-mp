@@ -3,14 +3,13 @@ package io.github.rkbalgi.iso4k
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
-internal class IsoBitmapTest {
-
+internal class IsoBitmapTests {
 
     @Test
     fun testBitmap() {
 
         val bmpData = fromHexString("f02420000000100e00000001000000010000000000000000")
+        println(bmpData.toHexString())
         val bmp = IsoBitmap(bmpData, null, null)
 
         for (i in 1..192) {
@@ -28,7 +27,7 @@ internal class IsoBitmapTest {
         assertEquals(true, bmp.isOn(61))
         assertEquals(true, bmp.isOn(128))
 
-        println(bmp.bytes().size)
+        println(bmp.bytes().toHexString())
 
         assertEquals("f02420000000100e00000001000000010000000000000000", bmp.bytes().toHexString())
 

@@ -10,13 +10,10 @@ import org.bouncycastle.util.encoders.Hex
 actual fun ByteArray.toHexString(): String =
     this.joinToString("") { (0xff and it.toInt()).toString(16).padStart(2, '0') }
 
-
 /**
  * @param str A string containing hex characters
  * @return ByteArray
  */
 actual fun fromHexString(str: String): ByteArray {
-    return Hex.decode(str)!!
+  return Hex.decode(str)!!
 }
-
-

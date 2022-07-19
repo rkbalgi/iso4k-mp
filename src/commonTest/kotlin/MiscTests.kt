@@ -2,18 +2,22 @@ package io.github.rkbalgi.iso4k
 
 import kotlin.test.*
 
+
 class MiscTests {
 
+    companion object {
+
+    }
 
 
     @BeforeTest
-    fun testInit(){
+    fun testInit() {
         addSpecsForTests()
     }
 
     //@OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun findMessageTest()   {
+    fun findMessageTest() {
 
         val spec = Spec.spec("SampleSpec")
 

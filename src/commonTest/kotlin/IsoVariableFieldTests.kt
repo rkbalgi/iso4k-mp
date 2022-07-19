@@ -1,10 +1,9 @@
-import io.github.rkbalgi.iso4k.DataEncoding
-import io.github.rkbalgi.iso4k.buildLengthIndicator
-import io.github.rkbalgi.iso4k.fromHexString
+package io.github.rkbalgi.iso4k
+
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
-internal class IsoFieldTestsJs {
+internal class IsoVariableFieldTests {
 
 
     @Test

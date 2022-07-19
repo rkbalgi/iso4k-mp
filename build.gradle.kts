@@ -1,4 +1,4 @@
-import java.time.Duration
+import com.diffplug.gradle.spotless.SpotlessExtension
 
 plugins {
     kotlin("multiplatform") version "1.6.21"
@@ -7,6 +7,7 @@ plugins {
     id("signing")
 
     id("org.jetbrains.dokka") version "1.6.21"
+    id("com.diffplug.spotless").version("6.8.0")
 }
 
 group = "io.github.rkbalgi"
@@ -47,12 +48,26 @@ kotlin {
 
             testTask {
                 useMocha {
-                    timeout="5000"
+                    timeout = "5000"
 
                 }
 
             }
         }
+    }
+
+    configure<SpotlessExtension> {
+
+
+        kotlin {
+            target("src/commonMain/kotlin/**/*.kt", "src/jvmMain/kotlin/**/*.kt", "src/jsMain/kotlin/**/*.kt")
+            ktfmt()
+            //ktlint()
+            //prettier()
+
+        }
+
+
     }
 
 

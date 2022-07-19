@@ -5,14 +5,23 @@ import kotlin.test.*
 
 class MiscTests {
 
-    companion object {
-
-    }
-
 
     @BeforeTest
     fun testInit() {
         addSpecsForTests()
+    }
+
+    @Test
+    fun test_bitmap_checks() {
+        val spec = Spec.spec("SampleSpec")!!
+        val msg = spec.message("1100/1110 - Authorization")!!
+
+        assertEquals("amount", msg.bitmap().pos(4).name)
+        assertEquals("key_mgmt_data", msg.bitmap().pos(96).name)
+
+        assertTrue(msg.bitmap().posDefined(61))
+        assertFalse(msg.bitmap().posDefined(60))
+
     }
 
     //@OptIn(ExperimentalCoroutinesApi::class)

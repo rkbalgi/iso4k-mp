@@ -38,7 +38,7 @@ class CommonTests {
     }
 
     @Test
-    fun test_message_parsing() {
+    fun test_message_parsing_and_assembling() {
 
         val spec = Spec.spec("SampleSpec")
 
@@ -69,7 +69,7 @@ class CommonTests {
             bitmap().setOn(38, "AP1234")
             bitmap().setOn(39, "000")
             println("Assembled Trace => " + msg?.bytes()?.toHexString())
-            println(Json { prettyPrint = true }.encodeToString(encodeToJson()))
+            println(jsonConfig.encodeToString(encodeToJson()))
 
         }
 
@@ -78,6 +78,19 @@ class CommonTests {
         val assembledMsg = spec?.message("1100/1110 - Authorization")?.parse(msg!!.bytes())
         println("----------Assembled Message --------\n" + jsonConfig.encodeToString(assembledMsg?.encodeToJson()))
         assertEquals(msg?.encodeToJson(), assembledMsg?.encodeToJson())
+
+        // turn off some fields
+
+        msg.run {
+            assertNotNull(this)
+            bitmap().setOff(128)
+            bitmap().setOff(38)
+            bitmap().setOff(96)
+            println("Assembled Trace => " + msg?.bytes()?.toHexString())
+            println(jsonConfig.encodeToString(encodeToJson()))
+
+        }
+
 
     }
 

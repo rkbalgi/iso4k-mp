@@ -57,19 +57,8 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
   }
 
   fun setOn(pos: Int) {
-    check(pos in 1..192)
-    val bp =
-        when {
-          pos < 65 -> {
-            Triple(1, l1, 64 - pos)
-          }
-          pos < 129 -> {
-            Triple(2, l2, 128 - pos)
-          }
-          else -> {
-            Triple(3, l3, 192 - pos)
-          }
-        }
+
+    val bp = getBp(pos)
 
     var l: Long = 1
     l = l.shl(bp.third).or(bp.second)
@@ -84,6 +73,55 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
         setOn(65)
       }
     }
+  }
+
+  fun setOff(pos: Int) {
+
+    val bp = getBp(pos)
+
+    var l: Long = 1
+
+    l = l.shl(bp.third).inv().and(bp.second)
+    when (bp.first) {
+      1 -> l1 = l
+      2 -> {
+        l2 = l
+        if (l2.or(0L) == 0L) {
+          setOff(1)
+        }
+      }
+      3 -> {
+        l3 = l
+        if (l3.or(0L) == 0L) {
+          setOff(65)
+        }
+      }
+    }
+
+    if (pos != 1 && pos != 65) {
+      val childField = field!!.children!!.first { it.position == pos }
+      msg!!.fieldDataMap.remove(childField)
+    }
+    msg!!.fieldDataMap[field!!] = FieldData(field!!, bytes())
+  }
+
+  private fun getBp(pos: Int): Triple<Int, Long, Int> {
+
+    check(pos in 1..192)
+
+    return when {
+      pos < 65 -> {
+        Triple(1, l1, 64 - pos)
+      }
+      pos < 129 -> {
+        Triple(2, l2, 128 - pos)
+      }
+      else -> {
+        Triple(3, l3, 192 - pos)
+      }
+    }
+
+    // return bp
   }
 
   /** @return The bytes that make up the bitmap */

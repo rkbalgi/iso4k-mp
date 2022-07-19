@@ -13,8 +13,8 @@ class MessageSegment(
 
   private var spec: Spec? = null
 
-  fun spec(): Spec? {
-    return spec
+  fun spec(spec: Spec) {
+    this.spec = spec
   }
 
   fun selectorMatch(selector: String): Boolean {
@@ -33,8 +33,9 @@ class MessageSegment(
     return msg
   }
 
-  fun setSpec(spec: Spec) {
-    this.spec = spec
+  fun bitmap(): IsoBitmapField {
+    var bmpField = fields.first { it.type == FieldType.Bitmapped }
+    return IsoBitmapField(bmpField)
   }
 
   /**

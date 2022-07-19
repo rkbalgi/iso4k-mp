@@ -52,7 +52,7 @@ public class Spec(
     Napier.d { "Initializing Spec - $name" }
     requestResponseMTIMapping.forEach { req2responseMap[it.requestMTI] = it.responseMTI }
     messageSegments.forEach { messageSegment ->
-      messageSegment.setSpec(this)
+      messageSegment.spec(this)
       messageSegment.fields.forEach {
         it.parent = null
         linkChildren(it)

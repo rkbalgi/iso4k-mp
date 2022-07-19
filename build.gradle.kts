@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "io.github.rkbalgi"
-version = "0.0.5"
+version = "1.0.0"
 
 repositories {
     mavenCentral()

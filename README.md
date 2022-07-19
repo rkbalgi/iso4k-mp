@@ -4,13 +4,21 @@ A multi-platform (JVM/JS) library to work with ISO8583 messages built using Kotl
 
 Glossary -
 
-1. A spec or specification defines message segments and header fields
-2. A message segment is a layout of a ISO8583 request or a response
+1. A Spec or Specification defines message segments and header fields
+2. A Message Segment is a layout of a ISO8583 request or a response
 3. The parsed header determines the message segment to be used
-4. A transaction a instance of a "message" composed of a request and a response
+
+
 
 ## Demo/Examples
 
+## Common
+You can add a new Spec by using - 
+```kotlin
+Spec.addSpec(""" 
+//Yaml definition 
+""")
+```
 ### JS/Browser
 
 See https://github.com/rkbalgi/iso4k-mp-browser-example

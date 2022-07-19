@@ -1,3 +1,1 @@
-@JsModule("specs")
-@JsNonModule
-external fun allSpecs(): Array<String>
+@JsModule("specs") @JsNonModule external fun allSpecs(): Array<String>

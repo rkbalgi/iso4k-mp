@@ -1,3 +1,5 @@
+import com.diffplug.gradle.spotless.SpotlessExtension
+
 plugins {
     kotlin("multiplatform") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
@@ -5,10 +7,11 @@ plugins {
     id("signing")
 
     id("org.jetbrains.dokka") version "1.6.21"
+    id("com.diffplug.spotless").version("6.8.0")
 }
 
 group = "io.github.rkbalgi"
-version = "0.0.4"
+version = "0.0.5"
 
 repositories {
     mavenCentral()
@@ -42,7 +45,29 @@ kotlin {
             commonWebpackConfig {
                 cssSupport.enabled = true
             }
+
+            testTask {
+                useMocha {
+                    timeout = "5000"
+
+                }
+
+            }
         }
+    }
+
+    configure<SpotlessExtension> {
+
+
+        kotlin {
+            target("src/commonMain/kotlin/**/*.kt", "src/jvmMain/kotlin/**/*.kt", "src/jsMain/kotlin/**/*.kt")
+            ktfmt()
+            //ktlint()
+            //prettier()
+
+        }
+
+
     }
 
 
@@ -83,8 +108,8 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                val localPath = rootDir.absolutePath + "/src/jsMain/js/specs"
-                implementation(npm("specs", File("$localPath")))
+//                val localPath = rootDir.absolutePath + "/src/jsMain/js/specs"
+//                implementation(npm("specs", File("$localPath")))
             }
         }
         val jsTest by getting {

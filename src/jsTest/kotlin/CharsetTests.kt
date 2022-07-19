@@ -1,7 +1,6 @@
-import io.github.rkbalgi.iso4k.DataEncoding
+package io.github.rkbalgi.iso4k
+
 import io.github.rkbalgi.iso4k.charsets.*
-import io.github.rkbalgi.iso4k.fromHexString
-import io.github.rkbalgi.iso4k.toHexString
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -16,13 +15,10 @@ class CharsetTests {
         assertContentEquals(fromHexString("3131313041"), ebcdic.encodedString(EBCDIC).toBytes(ASCII))
 
         var str = "~~~~~~~~~~~~~";
-        val ebcdic2=Charsets.fromString(str,DataEncoding.EBCDIC)
+        val ebcdic2 = Charsets.fromString(str, DataEncoding.EBCDIC)
         println(ebcdic2.toHexString())
 
-        assertEquals(str,ebcdic2.encodedString(EBCDIC))
-
-
-
+        assertEquals(str, ebcdic2.encodedString(EBCDIC))
 
     }
 }

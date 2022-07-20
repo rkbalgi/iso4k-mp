@@ -33,7 +33,7 @@ data class FieldData(val field: IsoField, private val data: ByteArray) {
 
   fun data(): ByteArray {
     return if (field.type == FieldType.Variable) {
-      val buf = newBuffer()
+      val buf = newBuffer(100)
       var pos: Int
       buf.apply {
         writeFully(buildLengthIndicator(field.lengthEncoding!!, field.len, data.size))

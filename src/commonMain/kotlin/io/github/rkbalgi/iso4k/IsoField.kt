@@ -59,10 +59,14 @@ data class IsoField(
 
   fun fieldData(msg: Message): ByteArray {
 
-    val buf = newBuffer()
+    val buf: Buffer?
 
     if (this.type == FieldType.Bitmapped) {
+      buf = newBuffer(1024)
       buf.writeFully(msg.fieldDataMap[this]!!.data())
+    } else {
+      // TODO:: Need a way to find a "expandable" buffer
+      buf = newBuffer(100)
     }
 
     if (hasChildren()) {

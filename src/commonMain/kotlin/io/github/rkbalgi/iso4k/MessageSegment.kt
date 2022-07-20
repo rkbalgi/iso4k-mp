@@ -13,6 +13,7 @@ class MessageSegment(
 
   private var spec: Spec? = null
 
+  /** @return The Spec to which this MessageSegment belongs */
   fun spec(spec: Spec) {
     this.spec = spec
   }
@@ -26,6 +27,10 @@ class MessageSegment(
     }
   }
 
+  /**
+   * Parse the given ByteArray as per the structure defined by the MessageSegment
+   * @return The parsed Message
+   */
   fun parse(msgData: ByteArray): Message {
     val msg = Message(this)
     val msgBuf = newBuffer(msgData)
@@ -33,19 +38,23 @@ class MessageSegment(
     return msg
   }
 
+  /**
+   * Returns the BitMap defined for this MessageSegment
+   * @return IsoBitmapField for this MessageSegment
+   */
   fun bitmap(): IsoBitmapField {
-    var bmpField = fields.first { it.type == FieldType.Bitmapped }
+    val bmpField = fields.first { it.type == FieldType.Bitmapped }
     return IsoBitmapField(bmpField)
   }
 
   /**
-   * Builds and returns a new blank Message
+   * Builds and returns a new blank Message that can be used to build a Message from scratch
    *
    * @return A new blank message
    */
   fun blankMessage(): Message {
     val msg = Message(this)
-    var bitmapField =
+    val bitmapField =
         this.fields.first { it ->
           it.type == FieldType.Bitmapped
         } // There can only be one top level field of type Bitmapped ??

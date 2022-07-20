@@ -7,7 +7,7 @@ import net.mamoe.yamlkt.Yaml
 
 const val specLocationProperty = "io.github.rkbalgi.iso4k.specsLocation"
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class MTIPair(val requestMTI: String, val responseMTI: String)
 
 /**
@@ -15,7 +15,7 @@ data class MTIPair(val requestMTI: String, val responseMTI: String)
  * (see *sample_spec.yml*)
  */
 @Serializable
-public class Spec(
+class Spec(
     val name: String,
     val id: Int,
     private val requestResponseMTIMapping: List<MTIPair>,
@@ -39,7 +39,7 @@ public class Spec(
 
   fun findMessage(msgData: ByteArray): String? {
     val bb = newBuffer(msgData)
-    var headerVal = headerFields.map { it.parse(bb) }.reduce { acc, a -> (acc + a) }
+    val headerVal = headerFields.map { it.parse(bb) }.reduce { acc, a -> (acc + a) }
 
     return try {
       messageSegments.first { it.selectorMatch(headerVal) }.name
@@ -97,7 +97,7 @@ public class Spec(
     var specMap = mutableMapOf<String, Spec>()
 
     fun allSpecs(): List<Spec> {
-      var listOfAllSpecs = mutableListOf<Spec>().apply { specMap.values.forEach { this.add(it) } }
+      val listOfAllSpecs = mutableListOf<Spec>().apply { specMap.values.forEach { this.add(it) } }
 
       return listOfAllSpecs
     }
@@ -124,7 +124,7 @@ public class Spec(
      */
     fun addSpec(specDefinition: String) {
 
-      var decoded = Yaml.decodeFromString(Spec.serializer(), specDefinition)
+      val decoded = Yaml.decodeFromString(Spec.serializer(), specDefinition)
 
       if (specMap.containsKey(decoded.name)) {
         Napier.w { "Spec ${decoded.name} already exists" }

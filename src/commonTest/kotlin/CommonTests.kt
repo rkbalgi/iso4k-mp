@@ -12,6 +12,8 @@ class CommonTests {
         addSpecsForTests()
     }
 
+    private val json = Json { prettyPrint = true }
+
     @Test
     fun test_create_msg_scratch() {
 
@@ -32,10 +34,12 @@ class CommonTests {
             "31313030b000000000000001000000010000000030303230303030303030303030303232303001020304abcdef1241424344",
             msg.bytes().toHexString()
         )
-        println(Json { prettyPrint = true }.encodeToString(msg.encodeToJson()))
+        println(json.encodeToString(msg.encodeToJson()))
 
 
     }
+
+
 
     @Test
     fun test_message_parsing_and_assembling() {
@@ -53,7 +57,7 @@ class CommonTests {
         }
         msg.run {
             assertNotNull(this)
-            println(Json { prettyPrint = true }.encodeToString(encodeToJson()))
+            println(json.encodeToString(encodeToJson()))
 
             assertEquals("1100", this.get("message_type")?.encodeToString())
             assertEquals("004000", this.bitmap().get(3)?.encodeToString())
@@ -95,14 +99,15 @@ class CommonTests {
     }
 
     @Test
+    @IgnoreTestForJs
     fun test_field_parent_linkup() {
 
         //loadSpecs()
-        var msg = Spec.spec("SampleSpec")?.message("1100/1110 - Authorization")
+        val msg = Spec.spec("SampleSpec")?.message("1100/1110 - Authorization")
         assertNotNull(msg)
 
         msg.fields.first { it.name == "bitmap" }.apply {
-            var child = children?.first { it.name == "proc_code" }
+            val child = children?.first { it.name == "proc_code" }
             assertTrue { child?.parent == this }
         }
 

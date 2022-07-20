@@ -7,6 +7,6 @@ actual fun newBuffer(data: ByteArray): Buffer {
   return Buffer(Memory.of(data)).also { it.resetForRead() }
 }
 
-actual fun newBuffer(): Buffer {
-  return Buffer(Memory.of(ByteArray(1024))).also { it.resetForWrite() }
+actual fun newBuffer(size: Int): Buffer {
+  return Buffer(Memory.of(ByteArray(size))).also { it.resetForWrite() }
 }

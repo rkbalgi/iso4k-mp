@@ -1,8 +1,6 @@
 package io.github.rkbalgi.iso4k
 
-/**
- * A wrapper around a IsoField to inspect bits of a Bitmapped field
- */
+/** A wrapper around a IsoField to inspect bits of a Bitmapped field */
 class IsoBitmapField(private val bmpField: IsoField) {
 
   /** Returns true if position within the bitmap is defined */

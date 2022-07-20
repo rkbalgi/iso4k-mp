@@ -1,5 +1,7 @@
 package io.github.rkbalgi.iso4k
 
+expect annotation class IgnoreTestForJs()
+
 fun addSpecsForTests() {
 
     println("Adding Spec .. ")

@@ -7,8 +7,7 @@ import net.mamoe.yamlkt.Yaml
 
 const val specLocationProperty = "io.github.rkbalgi.iso4k.specsLocation"
 
-@Serializable
-data class MTIPair(val requestMTI: String, val responseMTI: String)
+@Serializable data class MTIPair(val requestMTI: String, val responseMTI: String)
 
 /**
  * Spec represents a ISO8583 specification. This class is usually mapped from a yaml definition file

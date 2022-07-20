@@ -26,7 +26,7 @@ actual fun loadSpecs(): List<String> {
   val objectMapper = ObjectMapper(YAMLFactory())
   objectMapper.registerKotlinModule()
 
-  var allSpecs: List<String>
+  val allSpecs: List<String>
 
   val specLocation = System.getProperty(specLocationProperty)
   if (!specLocation.isNullOrEmpty()) {

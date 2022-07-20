@@ -48,7 +48,7 @@ internal fun convertA2E(data: ByteArray): ByteArray {
     initMaps()
   }
 
-  var res = ByteArray(data.size)
+  val res = ByteArray(data.size)
   var i = 0
 
   data.forEach {
@@ -67,7 +67,7 @@ internal fun convertE2A(data: ByteArray): ByteArray {
     initMaps()
   }
 
-  var res = ByteArray(data.size)
+  val res = ByteArray(data.size)
   var i = 0
 
   data.forEach {

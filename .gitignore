@@ -8,3 +8,5 @@
 /build/js/packages/iso4k-mp-js-legacy-test/kotlin/
 .idea
 *.hprof
+**/build/*
+**/.gradle

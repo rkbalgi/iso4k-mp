@@ -3,6 +3,7 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 plugins {
     kotlin("multiplatform") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
+
     id("maven-publish")
     id("signing")
 
@@ -11,18 +12,13 @@ plugins {
 }
 
 group = "io.github.rkbalgi"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
 }
 
-val jacksonVersion by properties
-val logbackVersion by properties
-val guavaVersion by properties
-val projectVersion by properties
 
-val napierVersion = "2.6.1"
 
 tasks.dokkaHtml.configure {
     outputDirectory.set(buildDir.resolve("dokka"))
@@ -57,17 +53,12 @@ kotlin {
     }
 
     configure<SpotlessExtension> {
-
-
         kotlin {
             target("src/commonMain/kotlin/**/*.kt", "src/jvmMain/kotlin/**/*.kt", "src/jsMain/kotlin/**/*.kt")
             ktfmt()
             //ktlint()
             //prettier()
-
         }
-
-
     }
 
 
@@ -78,7 +69,7 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
                 implementation("io.ktor:ktor-io:2.0.2")
-                implementation("io.github.aakira:napier:$napierVersion")
+                implementation("io.github.aakira:napier:${Versions.napierVersion}")
                 implementation("org.jetbrains.kotlin:atomicfu:1.6.21")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
                 implementation("net.mamoe.yamlkt:yamlkt:0.10.2")
@@ -97,10 +88,10 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("org.slf4j:slf4j-api:1.7.36")
-                implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("ch.qos.logback:logback-core:$logbackVersion")
-                implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
-                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+                implementation("ch.qos.logback:logback-classic:${Versions.logbackVersion}")
+                implementation("ch.qos.logback:logback-core:${Versions.logbackVersion}")
+                implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Versions.jacksonVersion}")
+                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonVersion}")
 
                 implementation("org.bouncycastle:bcprov-jdk18on:1.71")
             }

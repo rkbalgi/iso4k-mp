@@ -151,7 +151,7 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
   fun get(pos: Int): FieldData? {
 
     try {
-      var res = this.field!!.children?.first { it.position == pos }
+      val res = this.field!!.children?.first { it.position == pos }
       if (this.msg!!.fieldDataMap.containsKey(res)) {
         return this.msg!!.fieldDataMap[res]!!
       }
@@ -186,5 +186,3 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
     }
   }
 }
-
-class FieldNotPresentException(msg: String) : Throwable(msg)

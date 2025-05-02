@@ -33,11 +33,24 @@ data class FieldData(val field: IsoField, private val data: ByteArray) {
 
   fun data(): ByteArray {
     return if (field.type == FieldType.Variable) {
-      val buf = newBuffer(100)
+      var buf = newBuffer(100)
       var pos: Int
       buf.apply {
         writeFully(buildLengthIndicator(field.lengthEncoding!!, field.len, data.size))
-        writeFully(data)
+
+        fun checkAndWrite(data: ByteArray) {
+
+          if ((buf.capacity - buf.writePosition) < data.size) {
+            val writePos = buf.writePosition
+            buf.resetForRead()
+            val initBuf = buf.readBytes(writePos)
+            buf = newBuffer(buf.capacity + data.size + 100)
+            buf.writeFully(initBuf)
+          }
+          buf.writeFully(data)
+        }
+
+        checkAndWrite(data)
         pos = buf.writePosition
         resetForRead()
       }

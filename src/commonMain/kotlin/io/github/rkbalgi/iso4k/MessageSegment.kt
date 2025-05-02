@@ -29,6 +29,7 @@ class MessageSegment(
 
   /**
    * Parse the given ByteArray as per the structure defined by the MessageSegment
+   *
    * @return The parsed Message
    */
   fun parse(msgData: ByteArray): Message {
@@ -40,6 +41,7 @@ class MessageSegment(
 
   /**
    * Returns the BitMap defined for this MessageSegment
+   *
    * @return IsoBitmapField for this MessageSegment
    */
   fun bitmap(): IsoBitmapField {

@@ -4,8 +4,9 @@ import org.bouncycastle.util.encoders.Hex
 
 /**
  * Returns a hex-string representing the contents of the [ByteArray]
- * @receiver ByteArray
+ *
  * @return the hex string
+ * @receiver ByteArray
  */
 actual fun ByteArray.toHexString(): String =
     this.joinToString("") { (0xff and it.toInt()).toString(16).padStart(2, '0') }

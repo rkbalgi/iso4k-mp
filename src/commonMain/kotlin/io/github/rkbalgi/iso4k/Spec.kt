@@ -62,7 +62,7 @@ class Spec(
   private fun linkChildren(field: IsoField) {
 
     if (field.hasChildren()) {
-      field.children?.forEach {
+      field.children.forEach {
         it.parent = field
         linkChildren(it)
       }
@@ -119,6 +119,7 @@ class Spec(
 
     /**
      * Add a new spec given it's YAML definition
+     *
      * @param specDefinition The YAML definition of the spec
      */
     fun addSpec(specDefinition: String) {

@@ -9,7 +9,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
 /** A Message represents a "populated" ISO MessageSegment */
-class Message(private val messageSegment: MessageSegment) {
+class Message(val messageSegment: MessageSegment) {
 
   private var bitmap: IsoBitmap = IsoBitmap(ByteArray(24), null, null)
   internal val fieldDataMap: MutableMap<IsoField, FieldData> = mutableMapOf()
@@ -64,7 +64,7 @@ class Message(private val messageSegment: MessageSegment) {
   private fun findInChildren(isoField: IsoField, fieldName: String): IsoField? {
 
     if (isoField.hasChildren()) {
-      isoField.children?.forEach {
+      isoField.children.forEach {
         if (it.name == fieldName) {
           return it
         }
@@ -118,7 +118,7 @@ class Message(private val messageSegment: MessageSegment) {
       put(
           "subFields",
           buildJsonObject {
-            isoField.children?.forEach { subField ->
+            isoField.children.forEach { subField ->
               if (isoField.type == FieldType.Bitmapped && bitmap.field == isoField) {
                 if (bitmap.isOn(subField.position)) {
                   put(subField.name, fieldAsJson(subField))
@@ -140,7 +140,7 @@ class Message(private val messageSegment: MessageSegment) {
    */
   fun bytes(): ByteArray {
 
-    val outBuf = newBuffer()
+    val outBuf = newBuffer(2048)
     messageSegment.fields.forEach { appendFieldData(outBuf, it) }
     return outBuf.readBytes(outBuf.writePosition)
   }

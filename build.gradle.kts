@@ -1,20 +1,21 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 
 plugins {
-    kotlin("multiplatform") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("multiplatform") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
 
     id("maven-publish")
     id("signing")
-
-    id("org.jetbrains.dokka") version "1.6.21"
-    id("com.diffplug.spotless").version("6.8.0")
+    id("org.jetbrains.dokka") version "2.0.0"
+    id("com.diffplug.spotless").version("7.0.3")
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "io.github.rkbalgi"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
+
     mavenCentral()
 }
 
@@ -56,8 +57,7 @@ kotlin {
         kotlin {
             target("src/commonMain/kotlin/**/*.kt", "src/jvmMain/kotlin/**/*.kt", "src/jsMain/kotlin/**/*.kt")
             ktfmt()
-            //ktlint()
-            //prettier()
+
         }
     }
 
@@ -97,12 +97,7 @@ kotlin {
             }
         }
         val jvmTest by getting
-        val jsMain by getting {
-            dependencies {
-//                val localPath = rootDir.absolutePath + "/src/jsMain/js/specs"
-//                implementation(npm("specs", File("$localPath")))
-            }
-        }
+        val jsMain by getting
         val jsTest by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
@@ -112,22 +107,22 @@ kotlin {
     }
 }
 
-publishing {
+nexusPublishing {
     repositories {
-        maven {
+        sonatype {
+            //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
 
-            name = "oss"
-            val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
-            credentials {
-                username = properties["mavenCentralUsername"] as String
-                password = properties["mavenCentralPassword"] as String
-            }
+            username.set(findProperty("ossrhUsername") as String)
+            password.set(findProperty("ossrhPassword") as String)
+
         }
-
     }
+}
+
+publishing {
 
     val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 

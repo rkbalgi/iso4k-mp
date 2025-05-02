@@ -70,6 +70,7 @@ class CommonTests {
             assertNotNull(this)
             // changing the msg
             fieldData("message_type", "1110")
+            bitmap().setOn(63,"helloworld".padEnd(600,'@'))
             bitmap().setOn(38, "AP1234")
             bitmap().setOn(39, "000")
             println("Assembled Trace => " + msg?.bytes()?.toHexString())
@@ -107,8 +108,8 @@ class CommonTests {
         assertNotNull(msg)
 
         msg.fields.first { it.name == "bitmap" }.apply {
-            val child = children?.first { it.name == "proc_code" }
-            assertTrue { child?.parent == this }
+            val child = children.first { it.name == "proc_code" }
+            assertTrue { child.parent == this }
         }
 
 

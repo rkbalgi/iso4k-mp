@@ -99,7 +99,7 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
     }
 
     if (pos != 1 && pos != 65) {
-      val childField = field!!.children!!.first { it.position == pos }
+      val childField = field!!.children.first { it.position == pos }
       msg!!.fieldDataMap.remove(childField)
     }
     msg!!.fieldDataMap[field!!] = FieldData(field!!, bytes())
@@ -137,8 +137,8 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
   fun get(fieldName: String): FieldData? {
 
     try {
-      val res = this.field!!.children?.first { it.name == fieldName }
-      if (res != null && this.msg!!.fieldDataMap.containsKey(res)) {
+      val res = this.field!!.children.first { it.name == fieldName }
+      if (this.msg!!.fieldDataMap.containsKey(res)) {
         return this.msg!!.fieldDataMap[res]!!
       }
     } catch (e: NoSuchElementException) {
@@ -151,7 +151,7 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
   fun get(pos: Int): FieldData? {
 
     try {
-      val res = this.field!!.children?.first { it.position == pos }
+      val res = this.field!!.children.first { it.position == pos }
       if (this.msg!!.fieldDataMap.containsKey(res)) {
         return this.msg!!.fieldDataMap[res]!!
       }
@@ -164,14 +164,14 @@ class IsoBitmap(private val bmpData: ByteArray, var field: IsoField?, msg: Messa
 
   fun setOn(pos: Int, fieldValue: String) {
 
-    val childField = field!!.children!!.first { it.position == pos }
+    val childField = field!!.children.first { it.position == pos }
     setOn(pos, Charsets.fromString(fieldValue, childField.dataEncoding))
   }
 
   private fun setOn(pos: Int, fieldValue: ByteArray) {
 
     try {
-      val childField = field!!.children!!.first { it.position == pos }
+      val childField = field!!.children.first { it.position == pos }
       childField.checkConstraints(fieldValue)
 
       msg!!.fieldDataMap[childField] = FieldData(childField, fieldValue)

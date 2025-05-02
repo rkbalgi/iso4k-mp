@@ -62,7 +62,7 @@ class Spec(
   private fun linkChildren(field: IsoField) {
 
     if (field.hasChildren()) {
-      field.children?.forEach {
+      field.children.forEach {
         it.parent = field
         linkChildren(it)
       }

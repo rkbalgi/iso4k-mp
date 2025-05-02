@@ -15,7 +15,7 @@ import net.mamoe.yamlkt.Yaml
 
 /**
  * Load spec definitions from YAML fields either from a location on the filesystem specified by
- * system propery *io.github.rkbalgi.iso4k.specsLocation* or from classpath (/specs.yml)
+ * system property *io.github.rkbalgi.iso4k.specsLocation* or from classpath (/specs.yml)
  *
  * @return A list of specs available/read
  */

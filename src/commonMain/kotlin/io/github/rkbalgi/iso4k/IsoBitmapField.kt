@@ -4,7 +4,7 @@ package io.github.rkbalgi.iso4k
 class IsoBitmapField(private val bmpField: IsoField) {
 
   /** Returns true if position within the bitmap is defined */
-  fun posDefined(pos: Int): Boolean = bmpField.children!!.any { it.position == pos }
+  fun posDefined(pos: Int): Boolean = bmpField.children.any { it.position == pos }
 
   /**
    * Returns a field defined at this position in the Bitmap
@@ -12,6 +12,6 @@ class IsoBitmapField(private val bmpField: IsoField) {
    */
   fun pos(pos: Int): IsoField {
     check(posDefined(pos))
-    return bmpField.children!!.first { it.position == pos }
+    return bmpField.children.first { it.position == pos }
   }
 }

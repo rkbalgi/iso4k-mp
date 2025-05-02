@@ -30,7 +30,7 @@ data class IsoField(
     val len: Int,
     val dataEncoding: DataEncoding,
     val lengthEncoding: DataEncoding? = null,
-    val children: Array<IsoField>? = null,
+    val children: Array<IsoField> = emptyArray(),
     var position: Int = 0,
     var key: Boolean = false,
 ) {
@@ -38,7 +38,7 @@ data class IsoField(
   var parent: IsoField? = null
 
   fun hasChildren(): Boolean {
-    return children != null && children.isNotEmpty()
+    return children.isNotEmpty()
   }
 
   override fun equals(other: Any?): Boolean {
@@ -59,24 +59,35 @@ data class IsoField(
 
   fun fieldData(msg: Message): ByteArray {
 
-    val buf: Buffer?
+    var buf: Buffer
 
     if (this.type == FieldType.Bitmapped) {
       buf = newBuffer(1024)
       buf.writeFully(msg.fieldDataMap[this]!!.data())
     } else {
-      // TODO:: Need a way to find a "expandable" buffer
       buf = newBuffer(100)
     }
 
+    fun checkAndWrite(data: ByteArray) {
+
+      if ((buf.capacity - buf.writePosition) < data.size) {
+        val pos = buf.writePosition
+        buf.resetForRead()
+        val initBuf = buf.readBytes(pos)
+        buf = newBuffer(buf.capacity + data.size + 100)
+        buf.writeFully(initBuf)
+      }
+      buf.writeFully(data)
+    }
+
     if (hasChildren()) {
-      children?.forEach {
+      children.forEach {
         if (msg.fieldDataMap.containsKey(it)) {
-          buf.writeFully(it.fieldData(msg))
+          checkAndWrite(it.fieldData(msg))
         }
       }
     } else {
-      buf.writeFully(msg.fieldDataMap[this]!!.data())
+      checkAndWrite(msg.fieldDataMap[this]!!.data())
     }
 
     return buf.run {
@@ -144,8 +155,8 @@ private fun parseBitmapped(field: IsoField, msg: Message, buf: Buffer) {
       msg.bitmap(IsoBitmap(bmpData, field, msg))
       setAndLog(msg, FieldData(field, bmpData))
       field.children
-          ?.filter { it.position > 0 && msg.bitmap().isOn(it.position) }
-          ?.forEach { it.parse(msg, buf) }
+          .filter { it.position > 0 && msg.bitmap().isOn(it.position) }
+          .forEach { it.parse(msg, buf) }
     }
     else -> {
       TODO("bitmap unimplemented for encoding type: $field.dataEncoding")
@@ -162,7 +173,7 @@ internal fun parseFixed(field: IsoField, msg: Message, buf: Buffer) {
 
   if (field.hasChildren()) {
     buf.rewind(field.len)
-    field.children?.forEach { it.parse(msg, buf) }
+    field.children.forEach { it.parse(msg, buf) }
   }
 }
 

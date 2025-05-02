@@ -119,6 +119,7 @@ class Spec(
 
     /**
      * Add a new spec given it's YAML definition
+     *
      * @param specDefinition The YAML definition of the spec
      */
     fun addSpec(specDefinition: String) {

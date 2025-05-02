@@ -1,5 +1,3 @@
-import com.diffplug.gradle.spotless.SpotlessExtension
-
 plugins {
     kotlin("multiplatform") version "2.1.20"
     kotlin("plugin.serialization") version "2.1.20"
@@ -15,11 +13,8 @@ group = "io.github.rkbalgi"
 version = "1.0.2"
 
 repositories {
-
     mavenCentral()
 }
-
-
 
 tasks.dokkaHtml.configure {
     outputDirectory.set(buildDir.resolve("dokka"))
@@ -28,19 +23,17 @@ tasks.dokkaHtml.configure {
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-        withJava()
+
+        //withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
-
     }
-    js(BOTH) {
+
+    js {
         browser {
+
             commonWebpackConfig {
-                cssSupport.enabled = true
             }
 
             testTask {
@@ -53,7 +46,7 @@ kotlin {
         }
     }
 
-    configure<SpotlessExtension> {
+    spotless {
         kotlin {
             target("src/commonMain/kotlin/**/*.kt", "src/jvmMain/kotlin/**/*.kt", "src/jsMain/kotlin/**/*.kt")
             ktfmt()

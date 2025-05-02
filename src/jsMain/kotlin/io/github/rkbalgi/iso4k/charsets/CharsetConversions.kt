@@ -12,10 +12,10 @@ const val EBCDIC: String = "EBCDIC"
 
 /**
  * Converts a [ByteArray] to a [String] in the given charset (ASCII/EBCDIC)
- * @receiver ByteArray
- * @param charset the charset to be used
  *
+ * @param charset the charset to be used
  * @return String encoded to charset
+ * @receiver ByteArray
  */
 fun ByteArray.encodedString(charset: String): String {
 
@@ -31,8 +31,9 @@ fun ByteArray.encodedString(charset: String): String {
 
 /**
  * Converts a [String] to a [ByteArray] as per the provided charset
- * @receiver String
+ *
  * @param charset the charset to be used
+ * @receiver String
  */
 fun String.toBytes(charset: String): ByteArray {
   return when (charset) {

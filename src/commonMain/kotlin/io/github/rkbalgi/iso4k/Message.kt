@@ -136,6 +136,7 @@ class Message(val messageSegment: MessageSegment) {
 
   /**
    * Converts the msg to a ISO8583 ByteArray
+   *
    * @return A binary ByteArray representing the ISO8583 message
    */
   fun bytes(): ByteArray {

@@ -8,6 +8,7 @@ class IsoBitmapField(private val bmpField: IsoField) {
 
   /**
    * Returns a field defined at this position in the Bitmap
+   *
    * @return The field definition for the given position
    */
   fun pos(pos: Int): IsoField {
